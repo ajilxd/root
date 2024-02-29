@@ -1,0 +1,500 @@
+<%- include("./header.ejs")%>
+<%- include("./partials/navbar.ejs")%>
+<div class="container" style="height: 600px;">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            background-color: #ffffff;
+            border-right: 1px solid #dee2e6;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .sidebar-item {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .sidebar-item:hover {
+            background-color: #e9ecef;
+        }
+        .save-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .address-card {
+            border-color: black;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+        }
+        .address-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .address-detail {
+            margin-bottom: 5px;
+        }
+        #addressContent {
+            height: 400px; /* Adjust the height as needed */
+            overflow-y: auto;
+        }
+       
+        /* Hide scrollbar when not needed */
+        #addressContent::-webkit-scrollbar {
+            width: 0;
+        }
+
+        #yourOrders{
+            height: 400px; /* Adjust the height as needed */
+            overflow-y: auto;
+        }
+        #yourOrders::-webkit-scrollbar {
+            width: 0;
+        }
+        .modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+    </style>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 sidebar mt-5">
+                <h4 class="mt-3 mb-4">User Profile</h4>
+                <ul class="list-unstyled">
+                    <li class="sidebar-item active" data-target="#edit-profile">Edit Profile</li>
+                    <li class="sidebar-item" data-target="#edit-address">Edit Address</li>
+                    <li class="sidebar-item" data-target="#edit-password">Edit Password</li>
+                    <li class="sidebar-item" data-target="#order-history">Order History</li>
+                </ul>
+            </div>
+ <!-- edit address modal  -->
+
+            <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Edit address</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editAddressForm">
+                            <div class="field">
+                              <label class="label">Type of Address:</label>
+                              <div class="control">
+                                <input class="input" type="text" name="editAddressType" placeholder="Type of Address" value="Home">
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">Name:</label>
+                              <div class="control">
+                                <input class="input" type="text" name="editName" placeholder="Name" value="John Doe">
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">Address:</label>
+                              <div class="control">
+                                <input class="input" type="text" name="editAddressLine" placeholder="Address" value="123 Main St, Apartment 4B">
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">City:</label>
+                              <div class="control">
+                                <input class="input" type="text" name="editCity" placeholder="City" value="Anytown">
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">State:</label>
+                              <div class="control">
+                                <input class="input" type="text" name="editState" placeholder="State" value="CA">
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">Zip:</label>
+                              <div class="control">
+                                <input class="input" type="text" name="editZip" placeholder="Zip" value="12345">
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">Country:</label>
+                              <div class="control">
+                                <input class="input" type="text" name="editCountry" placeholder="Country" value="USA">
+                              </div>
+                            </div>
+                            <div class="field">
+                              <label class="label">Mobileno:</label>
+                              <div class="control">
+                                <input class="input" type="text" name="editMobileNo" placeholder="Country" value="">
+                              </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+                  </div>
+                </div>
+              </div>
+            <!-- edit address modal end -->
+
+              <!-- Add address modal start -->
+
+            <div class="modal" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Add address</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addAddressForm" method="post" >
+                            <div class="field">
+                              <label class="label">Type of Address:</label>
+                              <div class="control">
+                                <input class="input" type="text" id="addAddressTypee" name="type" placeholder="Type of Address" >
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">Name:</label>
+                              <div class="control">
+                                <input class="input" type="text" id="addName" placeholder="name" >
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">Address:</label>
+                              <div class="control">
+                                <input class="input" type="text" id="addAddressline" placeholder="Address" >
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">City:</label>
+                              <div class="control">
+                                <input class="input" type="text" id="addCity" placeholder="City" >
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">State:</label>
+                              <div class="control">
+                                <input class="input" type="text" id="addState" placeholder="State" >
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">Zip:</label>
+                              <div class="control">
+                                <input class="input" type="text" id="addZip" placeholder="Zip" >
+                              </div>
+                            </div>
+                            
+                            <div class="field">
+                              <label class="label">Country:</label>
+                              <div class="control">
+                                <input class="input" type="text" id="addCountry" placeholder="Country" >
+                              </div>
+                            </div>
+
+                            <div class="field">
+                              <label class="label">Mobileno:</label>
+                              <div class="control">
+                                <input class="input" type="text" id="addMobileNo" placeholder="Phoneno" >
+                              </div>
+                            </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <div class="text-danger lead" id="adderror"></div>
+                      <div class="text-danger lead" id="addsuccess"></div>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+                  </div>
+                </div>
+              </div>
+            <!-- add address modal end -->
+
+
+
+
+            <!-- edit profile section -->
+            <div class="col-md-9 main-content">
+                <div id="edit-profile" class="content-item">
+                    <h2>Edit Profile</h2>
+                    <form class="col-8" >
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="text" class="form-control" id="phone" placeholder="Enter your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select class="form-control" id="gender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <button type="submit" class="save-btn">Save</button>
+                    </form>
+                </div>
+                <div id="edit-address" class="content-item overflow-auto" style="display: none;">
+                    <!-- Edit Address Form Goes Here -->
+                    <div class="d-flex justify-content-between ">
+                    <div class="h2">Edit Address</div>
+                    <div><button class="btn btn-success btn-sm " id="editaddrbtn"  data-toggle="modal" data-target="#addAddressModal">Add address</button></div>
+                     </div>
+                    <div id="addressContent">
+                    <div class="card" >
+                        <div class="card-content">
+                          <div class="content">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="address-card">
+                                        <div class="d-flex justify-content-around mb-3">
+                                            <div class="address-title h4">Home Address</div>
+                                            <div><button class="btn btn-success btn-sm " id="editaddrbtn"  data-toggle="modal" data-target="#exampleModal">Edit</button></div>
+                                        </div>
+                                      
+                                        <p class="address-detail"><strong>Name:</strong> John Doe</p>
+                                        <p class="address-detail"><strong>Address:</strong> 123 Main St, Apartment 4B</p>
+                                        <p class="address-detail"><strong>City:</strong> Anytown</p>
+                                        <p class="address-detail"><strong>State:</strong> CA</p>
+                                        <p class="address-detail"><strong>Zip:</strong> 12345</p>
+                                        <p class="address-detail"><strong>Country:</strong> USA</p>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div id="edit-password" class="content-item" style="display: none;">
+                    <!-- Edit Password Form Goes Here -->
+                    <h2>Edit Password</h2>
+                        <div class="col-md-6">
+                            <div class="change-password-form">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="oldPassword">Old Password</label>
+                                        <input type="password" class="form-control" id="oldPassword" placeholder="Enter old password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newPassword">New Password</label>
+                                        <input type="password" class="form-control" id="newPassword" placeholder="Enter new password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmNewPassword">Confirm New Password</label>
+                                        <input type="password" class="form-control" id="confirmNewPassword" placeholder="Confirm new password">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Change Password</button>
+                                </form>
+                            </div>
+                        </div>
+                 
+
+                   
+                </div>
+                <div id="order-history" class="content-item" style="display: none;">
+                    <!-- Order History Content Goes Here -->
+                    <h2>Order History</h2>
+                    <div class="my-3">
+                    <button class="tablink btn btn-light" onclick="openTab(event, 'yourOrders')"  >Your Orders</button>
+                    <button class="tablink btn btn-light" onclick="openTab(event, 'cancelledOrders')">Cancelled Orders</button>
+                    <button class="tablink btn  btn-light" onclick="openTab(event, 'returnedOrders')">Returned Orders</button>
+                    </div>
+<div class="tab" id="yourOrders" style="display:none" class="mt-5 ms-3">
+    <h2 class="h5 ms-3">Your Orders</h2>
+    
+    <div class="card">
+        <div class="card-body">
+          <div class="is-flex justify-content-evenly ">
+            <p class="text-muted">Order placed -10/07/2000</p>
+            <p class="text-muted">Totals -89890/-</p>
+            <p class="text-muted">Ship to - ajil</p>
+            <p class="text-muted">Pincode - 673591 </p>
+          </div>
+          <div class="is-flex justify-content-evenly mt-3 ">
+            <div class="col-3"><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="img-fluid" style="max-height:100px;"></div>
+            <div class="col-5">
+                <p class="lead fw-bold">Kairo chairs</p>
+                <p class="fw-bold ">Quantity</p>
+                <p class="fw-bold"> #8989797</p>
+            </div>
+            <div class="col-2">
+                <p class="text-success h4">Pending</p>
+                <button class="btn btn-outline-dark">Buy again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="is-flex justify-content-evenly ">
+            <p class="text-muted">Order placed -10/07/2000</p>
+            <p class="text-muted">Totals -89890/-</p>
+            <p class="text-muted">Ship to - ajil</p>
+            <p class="text-muted">Pincode - 673591 </p>
+          </div>
+          <div class="is-flex justify-content-evenly mt-3 ">
+            <div class="col-3"><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="img-fluid" style="max-height:100px;"></div>
+            <div class="col-5">
+                <p class="lead fw-bold">Kairo chairs</p>
+                <p class="fw-bold ">Quantity</p>
+                <p class="fw-bold"> #8989797</p>
+            </div>
+            <div class="col-2">
+                <p class="text-success h4">Pending</p>
+                <button class="btn btn-outline-dark">Buy again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+</div>
+
+<div class="tab" id="cancelledOrders" style="display:none" class="mt-5 ms-3">
+    <h2 class="h5 ms-3">Cancelled Orders</h2>
+    <!-- Content for cancelled orders tab -->
+</div>
+
+<div class="tab" id="returnedOrders" style="display:none" class="mt-5 ms-3">
+    <h2 class="h5 ms-3">Returned Orders</h2>
+    <!-- Content for returned orders tab -->
+</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("./footer.ejs")%>
+ <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+   // add address
+   const addAddress =document.getElementById('addAddressForm');
+    document.addEventListener('DOMContentLoaded', function() {
+    addAddress.addEventListener('submit',function(event){
+    event.preventDefault();
+    const country = document.getElementById('addCountry').value;
+    const zipcode = document.getElementById('addZip').value;
+    const state = document.getElementById('addState').value;
+    const city = document.getElementById('addCity').value;
+    const addressline = document.getElementById('addAddressline').value;
+    const name = document.getElementById('addName').value;
+    const type = document.getElementById('addAddressTypee').value;
+    const mobileno = document.getElementById('addMobileNo').value;
+    const formData ={country ,zipcode, state ,city, addressline ,name ,type,mobileno}
+      
+      axios.post('/addaddress',formData).then((response)=>{
+        console.log('form submitted succesfully');
+        if(response.data!==true){
+          setTimeout(function(){
+            document.getElementById('adderror').textContent='';
+          },3000)
+          document.getElementById('adderror').textContent=response.data;
+        }else{
+          setTimeout(function(){
+            document.getElementById('addsuccess').textContent='';
+            document.querySelector('.modal-backdrop').setAttribute('aria-hidden', 'true');
+          },3000)
+          document.getElementById('addsuccess').textContent="Address added succesfully";
+         
+        }
+      })
+      .catch((error)=>{
+        console.log(error.message);
+      })
+    })
+   });
+
+
+     $(document).ready(function() {
+            var addressDiv = $('addressContent');
+            addressDiv.on('scroll', function() {
+                if (addressDiv[0].scrollHeight > addressDiv.outerHeight()) {
+                    addressDiv.addClass('overflow-auto');
+                } else {
+                    addressDiv.removeClass('overflow-auto');
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            var addressDiv = $('#yourOrders');
+            addressDiv.on('scroll', function() {
+                if (addressDiv[0].scrollHeight > addressDiv.outerHeight()) {
+                    addressDiv.addClass('overflow-auto');
+                } else {
+                    addressDiv.removeClass('overflow-auto');
+                }
+            });
+        });
+
+    $(document).ready(function(){
+        $('.sidebar-item').click(function(){
+            $('.sidebar-item').removeClass('active');
+            $(this).addClass('active');
+            var target = $(this).data('target');
+            $('.content-item').hide();
+            $(target).show();
+        });
+    });
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    // By default, display the first tab
+    window.onload=function(){
+        document.getElementsByClassName("tab")[0].style.display = "block"
+    }
+
+
+
+
+
+ 
+</script>
