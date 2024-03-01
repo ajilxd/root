@@ -1,4 +1,5 @@
 <%- include("./header.ejs")%>
+<link href="https://cdn.jsdelivr.net/npm/notyf@3/dist/notyf.min.css" rel="stylesheet">
 <%- include("./partials/navbar.ejs")%>
 <div class="container" style="height: 600px;">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -92,61 +93,61 @@
                             <div class="field">
                               <label class="label">Type of Address:</label>
                               <div class="control">
-                                <input class="input" type="text" name="editAddressType" placeholder="Type of Address" value="Home">
+                                <input class="input" type="text" id="typedb" >
                               </div>
                             </div>
                             
                             <div class="field">
                               <label class="label">Name:</label>
                               <div class="control">
-                                <input class="input" type="text" name="editName" placeholder="Name" value="John Doe">
+                                <input class="input" type="text" id="namedb" >
                               </div>
                             </div>
                             
                             <div class="field">
                               <label class="label">Address:</label>
                               <div class="control">
-                                <input class="input" type="text" name="editAddressLine" placeholder="Address" value="123 Main St, Apartment 4B">
+                                <input class="input" type="text" id="addresslinedb"  >
                               </div>
                             </div>
                             
                             <div class="field">
                               <label class="label">City:</label>
                               <div class="control">
-                                <input class="input" type="text" name="editCity" placeholder="City" value="Anytown">
+                                <input class="input" type="text" id="citydb" >
                               </div>
                             </div>
                             
                             <div class="field">
                               <label class="label">State:</label>
                               <div class="control">
-                                <input class="input" type="text" name="editState" placeholder="State" value="CA">
+                                <input class="input" type="text"  id="statedb" >
                               </div>
                             </div>
                             
                             <div class="field">
                               <label class="label">Zip:</label>
                               <div class="control">
-                                <input class="input" type="text" name="editZip" placeholder="Zip" value="12345">
+                                <input class="input" type="text"  id="zipdb"  >
                               </div>
                             </div>
                             
                             <div class="field">
                               <label class="label">Country:</label>
                               <div class="control">
-                                <input class="input" type="text" name="editCountry" placeholder="Country" value="USA">
+                                <input class="input" type="text"  id="countrydb"  >
                               </div>
                             </div>
                             <div class="field">
                               <label class="label">Mobileno:</label>
                               <div class="control">
-                                <input class="input" type="text" name="editMobileNo" placeholder="Country" value="">
+                                <input class="input" type="text" id="mobilenodb" >
                               </div>
                             </div>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Save changes</button>
+                      <button  class="btn btn-primary" id="editaddresssubmit">Save changes</button>
                     </div>
                 </form>
                   </div>
@@ -241,32 +242,40 @@
 
             <!-- edit profile section -->
             <div class="col-md-9 main-content">
-                <div id="edit-profile" class="content-item">
-                    <h2>Edit Profile</h2>
-                    <form class="col-8" >
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter your name">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="text" class="form-control" id="phone" placeholder="Enter your phone number">
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">Gender</label>
-                            <select class="form-control" id="gender">
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email address</label>
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-                        </div>
-                        <button type="submit" class="save-btn">Save</button>
-                    </form>
-                </div>
+              <div id="edit-profile" class="content-item">
+                <h2>Edit Profile</h2>
+                
+                <div class="col-8">
+                  
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="pname" placeholder="<%= userData.name %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <%if(userData.mobilenumber){%>
+                        <input type="text" class="form-control" id="pphone" placeholder="<%= userData.mobilenumber %>">
+                        <%}else{%>
+                          <input type="text" class="form-control" id="pphone" placeholder="Add phone number">
+                        <%}%>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select class="form-control" id="pgender">
+                            <option value="male" selected>Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control" id="pemail" aria-describedby="emailHelp" placeholder="<%= userData.email %>">
+                    </div>
+                  
+                    <button class="save-btn" id="editprofilebtn">Save</button>
+                  </div>
+            </div>
+            
                 <div id="edit-address" class="content-item overflow-auto" style="display: none;">
                     <!-- Edit Address Form Goes Here -->
                     <div class="d-flex justify-content-between ">
@@ -277,23 +286,28 @@
                     <div class="card" >
                         <div class="card-content">
                           <div class="content">
+                            <%addressData.forEach(i=>{%>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="address-card">
                                         <div class="d-flex justify-content-around mb-3">
                                             <div class="address-title h4">Home Address</div>
-                                            <div><button class="btn btn-success btn-sm " id="editaddrbtn"  data-toggle="modal" data-target="#exampleModal">Edit</button></div>
+                                            <div><button class="btn btn-success btn-sm editaddressbtns"   data-toggle="modal" data-target="#exampleModal" data-id="<%=i._id%>"
+                                            data-name="<%=i.name%>"  data-type="<%=i.type%>" data-addressline="<%=i.addressline%>" data-country="<%=i.country%>"
+                                            data-state="<%=i.state%>" data-city="<%=i.city%>" data-zipcode="<%=i.zipcode%>" data-mobileno="<%=i.mobileno%>"
+                                              >Edit</button></div>
                                         </div>
                                       
-                                        <p class="address-detail"><strong>Name:</strong> John Doe</p>
-                                        <p class="address-detail"><strong>Address:</strong> 123 Main St, Apartment 4B</p>
-                                        <p class="address-detail"><strong>City:</strong> Anytown</p>
-                                        <p class="address-detail"><strong>State:</strong> CA</p>
-                                        <p class="address-detail"><strong>Zip:</strong> 12345</p>
-                                        <p class="address-detail"><strong>Country:</strong> USA</p>
+                                        <p class="address-detail"><strong class="me-3 ">Name:</strong><%=i.name%></p>
+                                        <p class="address-detail"><strong class="me-3 ">Address:</strong><%=i.addressline%></p>
+                                        <p class="address-detail"><strong class="me-3 ">City:</strong><%=i.city%></p>
+                                        <p class="address-detail"><strong class="me-3 ">State:</strong><%=i.state%></p>
+                                        <p class="address-detail"><strong class="me-3 ">Zip:</strong><%=i.zipcode%></p>
+                                        <p class="address-detail"><strong class="me-3 ">Country:</strong><%=i.country%></p>
                                     </div>
                                 </div>
                             </div>
+                            <%})%>
                           </div>
                         </div>
                       </div>
@@ -304,7 +318,7 @@
                     <h2>Edit Password</h2>
                         <div class="col-md-6">
                             <div class="change-password-form">
-                                <form>
+                                
                                     <div class="form-group">
                                         <label for="oldPassword">Old Password</label>
                                         <input type="password" class="form-control" id="oldPassword" placeholder="Enter old password">
@@ -317,8 +331,9 @@
                                         <label for="confirmNewPassword">Confirm New Password</label>
                                         <input type="password" class="form-control" id="confirmNewPassword" placeholder="Confirm new password">
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Change Password</button>
-                                </form>
+                                    <div id="passworderror" class="text-danger "></div>
+                                    <button  class="btn btn-primary" id="changepasswordbtn">Change Password</button>
+                                
                             </div>
                         </div>
                  
@@ -335,52 +350,37 @@
                     </div>
 <div class="tab" id="yourOrders" style="display:none" class="mt-5 ms-3">
     <h2 class="h5 ms-3">Your Orders</h2>
-    
+    <%orderData.forEach(i=>{%>
     <div class="card">
         <div class="card-body">
           <div class="is-flex justify-content-evenly ">
-            <p class="text-muted">Order placed -10/07/2000</p>
-            <p class="text-muted">Totals -89890/-</p>
-            <p class="text-muted">Ship to - ajil</p>
+            <p class="text-muted">Order placed -<%=i.createdAt%></p>
+            <p class="text-muted">Totals -<%=i.orderAmount%>/-</p>
+            <!-- <p class="text-muted">Ship to - ajil</p> -->
             <p class="text-muted">Pincode - 673591 </p>
           </div>
-          <div class="is-flex justify-content-evenly mt-3 ">
-            <div class="col-3"><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="img-fluid" style="max-height:100px;"></div>
+          <div class="is-flex justify-content-evenly mt-3">
+            <div class="col-3">
+                <img src="/multer/products/<%= i.orderedItems[0].image %>" alt="" class="img-fluid" style="max-height:100px;">
+            </div>
             <div class="col-5">
-                <p class="lead fw-bold">Kairo chairs</p>
-                <p class="fw-bold ">Quantity</p>
-                <p class="fw-bold"> #8989797</p>
+                <p class="lead fw-bold">
+                    <% i.orderedItems.forEach(item => { %>
+                        <span><%= item.productname %>,</span>
+                    <% }) %>
+                </p>
+                <p class="fw-bold">Quantity</p>
+                <p class="fw-bold">#<%= i.orderId %></p>
             </div>
             <div class="col-2">
-                <p class="text-success h4">Pending</p>
+                <p class="text-success h4"><%= i.status %></p>
                 <button class="btn btn-outline-dark">Buy again</button>
             </div>
-          </div>
+        </div>
+        
         </div>
       </div>
-      <div class="card">
-        <div class="card-body">
-          <div class="is-flex justify-content-evenly ">
-            <p class="text-muted">Order placed -10/07/2000</p>
-            <p class="text-muted">Totals -89890/-</p>
-            <p class="text-muted">Ship to - ajil</p>
-            <p class="text-muted">Pincode - 673591 </p>
-          </div>
-          <div class="is-flex justify-content-evenly mt-3 ">
-            <div class="col-3"><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="img-fluid" style="max-height:100px;"></div>
-            <div class="col-5">
-                <p class="lead fw-bold">Kairo chairs</p>
-                <p class="fw-bold ">Quantity</p>
-                <p class="fw-bold"> #8989797</p>
-            </div>
-            <div class="col-2">
-                <p class="text-success h4">Pending</p>
-                <button class="btn btn-outline-dark">Buy again</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    
+      <%})%>
 </div>
 
 <div class="tab" id="cancelledOrders" style="display:none" class="mt-5 ms-3">
@@ -403,7 +403,14 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/notyf@3"></script>
 <script>
+ 
+   const notyf = new Notyf({
+        position: {
+            x: 'right',
+            y: 'top',
+        }});
    // add address
    const addAddress =document.getElementById('addAddressForm');
     document.addEventListener('DOMContentLoaded', function() {
@@ -439,6 +446,121 @@
         console.log(error.message);
       })
     })
+
+
+// change password
+      const validdata=true;
+      const oldpasswordbtn=document.getElementById('oldPassword');
+      const newPasswordbtn=document.getElementById('newPassword');
+      const confirmNewPasswordbtn=document.getElementById('confirmNewPassword');
+      const changepasswordbtn=document.getElementById('changepasswordbtn');
+      const passerror=document.getElementById('passworderror');
+      changepasswordbtn.addEventListener('click',function(){
+        const newpassword=newPasswordbtn.value;
+        const oldpassword=oldpasswordbtn.value;
+        const confirmnewpassword=confirmNewPasswordbtn.value;
+        if(newpassword!==confirmnewpassword){
+          validdata=false;
+          passerror.textContent="password doesnt match"
+          setTimeout(function(){
+            passerror.textContent=""
+          },3000)
+        }
+        if(confirmNewPasswordbtn.length<3){
+          validdata=false;
+          passerror.textContent="min 8 characaters",
+          setTimeout(function(){
+            passerror.textContent=""
+          },3000)
+        }
+          if(validdata){
+          axios.post('/changepassword',{oldpassword,confirmnewpassword}).then((response)=>{
+            if(response.data=='success'){
+              notyf.success('password updated !!')
+            }else{
+              passerror.textContent="Wrong old password";
+            }
+          }).catch((error)=>{
+            console.log(error.message);
+          })
+
+        }
+      })
+
+// edit profile
+
+
+const editprofilebtn=document.getElementById('editprofilebtn');
+editprofilebtn.addEventListener('click',function(){
+  const name=document.getElementById('pname').value;
+  const mobileno=document.getElementById('pphone').value;
+  const gender=document.getElementById('pgender').value;
+  const email=document.getElementById('pemail').value;
+  axios.post('/editprofile',{name,mobileno,gender,email}).then((response)=>{
+    if(response.data===true){
+      notyf.success('profile updated succesfully !!');
+      window.location.reload();
+    }else{
+      notyf.error(response.data);
+    }
+  })
+})
+
+
+// edit address
+const editaddressbtns =document.querySelectorAll('.editaddressbtns')
+let addressId;
+editaddressbtns.forEach(i=>{
+  i.addEventListener('click',function(){
+    addressId=this.getAttribute('data-id');
+    const name=this.getAttribute('data-name');
+    const type=this.getAttribute('data-type');
+    const addressline=this.getAttribute('data-addressline');
+    const country=this.getAttribute('data-country');
+    const state=this.getAttribute('data-state');
+    const city=this.getAttribute('data-city');
+    const zipcode=this.getAttribute('data-zipcode');
+    const mobileno=this.getAttribute('data-mobileno');
+    console.log(name,type,addressline,country,state,city,zipcode,mobileno);
+    document.getElementById('typedb').value = type;
+    document.getElementById('namedb').value = name;
+    document.getElementById('addresslinedb').value = addressline;
+    document.getElementById('citydb').value = city;
+    document.getElementById('statedb').value = state;
+    document.getElementById('zipdb').value = zipcode;
+    document.getElementById('countrydb').value = country;
+    document.getElementById('mobilenodb').value = mobileno;
+  })
+})
+
+document.getElementById('editaddresssubmit').addEventListener('click',function(){
+ const type= document.getElementById('typedb').value 
+  const  name= document.getElementById('namedb').value 
+  const addressline=  document.getElementById('addresslinedb').value 
+  const city= document.getElementById('citydb').value 
+  const state=document.getElementById('statedb').value 
+  const zipcode=document.getElementById('zipdb').value 
+  const country=document.getElementById('countrydb').value 
+  const mobileno=document.getElementById('mobilenodb').value 
+  const formData={name,addressline,city,state,zipcode,country,mobileno,type};
+  axios.post(`/editAddress/${addressId}`,{formData}).then((response)=>{
+    if(response.data===true){
+      notyf.success('Address has been updated..');
+    }else{
+      notyf.error(response.message);
+    }
+  }).catch((error)=>{
+    console.log(error.message);
+  })
+})
+
+
+
+
+
+
+
+
    });
 
 
@@ -492,8 +614,7 @@
         document.getElementsByClassName("tab")[0].style.display = "block"
     }
 
-
-
+    
 
 
  

@@ -27,6 +27,9 @@ const cartSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  image: {
+    type: String,
+  },
 });
 
 const cartModel = mongoose.model("cart", cartSchema);

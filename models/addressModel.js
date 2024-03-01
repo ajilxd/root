@@ -2,9 +2,10 @@ const mongoose = require("mongoose");
 const Objectid = mongoose.Schema.Types.ObjectId;
 
 const addressSchema = new mongoose.Schema({
-  userid: {
+  userId: {
     type: Objectid,
     ref: "users",
+    required: true,
   },
   name: {
     type: String,

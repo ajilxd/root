@@ -87,10 +87,25 @@ const addressSchema = joi.object({
     .required(),
 });
 
+const editProfileSchema = joi.object({
+  name: joi
+    .string()
+    .min(3)
+    .regex(/^[a-zA-Z]*$/)
+    .required(),
+  mobileno: joi
+    .string()
+    .regex(/^[0-9]*$/)
+    .required(),
+  email: joi.string().email().required(),
+  gender: joi.string(),
+});
+
 module.exports = {
   signupSchema,
   signinSchema,
   categorySchema,
   productSchema,
   addressSchema,
+  editProfileSchema,
 };

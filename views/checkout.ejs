@@ -1,0 +1,296 @@
+<%- include("header.ejs")%>
+<link href="https://cdn.jsdelivr.net/npm/notyf@3/dist/notyf.min.css" rel="stylesheet">
+<%- include("partials/navbar.ejs")%>
+
+		<!-- Start Hero Section -->
+			<div class="hero">
+				<div class="container">
+					<div class="row justify-content-between">
+						<div class="col-lg-5">
+							<div class="intro-excerpt">
+								<h1>Checkout</h1>
+							</div>
+						</div>
+						<div class="col-lg-7">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		<!-- End Hero Section -->
+
+		<div class="untree_co-section">
+		    <div class="container">
+		     
+		      <div class="row">
+		        <div class="col-md-6 mb-5 mb-md-0">
+		          <h2 class="h3 mb-3 text-black">Billing Details</h2>
+		          <div class="p-3 p-lg-5 border bg-white">
+		            <div class="form-group">
+						<div class="form-group row">
+							<div class="col-md-12">
+							  <label for="c_companyname" class="text-black">Country </label>
+							  <input type="text" class="form-control" id="fcountry" >
+							</div>
+						  </div>
+		            </div>
+		            <div class="form-group row">
+		              <div class="col-md-6">
+		                <label for="c_fname" class="text-black">State <span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="fstate" >
+		              </div>
+		              <div class="col-md-6">
+		                <label for="c_lname" class="text-black">City <span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="fcity" >
+		              </div>
+		            </div>
+
+
+		            <div class="form-group row">
+		              <div class="col-md-12">
+		                <label for="c_address" class="text-black">Address <span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="faddressline"  placeholder="Address line">
+		              </div>
+		            </div>
+
+		    
+
+		            <div class="form-group row">
+		             
+		              <div class="col-md-6">
+		                <label for="c_postal_zip" class="text-black">Posta / Zip <span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="fzipcode" >
+		              </div>
+					  <div class="col-md-6">
+		                <label for="c_phone" class="text-black">Phone <span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="fphone" name="c_phone" placeholder="Phone Number">
+		              </div>
+		            </div>
+
+					<div class="form-group row">
+						<div class="col-md-6">
+						  <label for="c_fname" class="text-black">Name <span class="text-danger">*</span></label>
+						  <input type="text" class="form-control" id="fname" >
+						</div>
+						<div class="col-md-6">
+						  <label for="c_lname" class="text-black">Type <span class="text-danger">*</span></label>
+						  <input type="text" class="form-control" id="ftype" >
+						</div>
+					  </div>
+
+		            <div class="col-12 d-flex justify-content-center mt-5 ">
+						<div class="col-4 ">
+							<div class="text-danger" id="addresserror" ></div>
+							<button class="btn btn-success" id="faddaddressbtn">Add address</button>
+						</div>
+					</div>
+
+
+					<div class="row mb-5 mt-5">
+						<div class="col-md-12">
+							<h2 class="h3 mb-3 text-black">Choose Address</h2>
+							
+							<% addressData.forEach(i => { %>
+							<label class="card col-5">
+								
+								<div>
+									<div class="card-header">
+										<p class="card-header-title" data-toggle="tooltip"  title="<%=i%>">
+											<%= i.type %>
+										</p>
+										<button class="card-header-icon" aria-label="more options">
+											<span class="icon">
+												<i class="fa-solid fa-house-chimney"></i>
+											</span>
+										</button>
+										<div class="text-end ">
+											<input type="radio" name="address" class="radio addressradio" value="<%= i._id %>">
+										</div>
+									</div>
+									
+								</div>
+								
+							</label>
+							<% }) %>
+						</div>
+					</div>
+
+
+		          </div>
+		        </div>
+		        <div class="col-md-6">
+
+		          <div class="row mb-5">
+		            <div class="col-md-12">
+		              <h2 class="h3 mb-3 text-black">Coupon Code</h2>
+		              <div class="p-3 p-lg-5 border bg-white">
+
+		                <label for="c_code" class="text-black mb-3">Enter your coupon code if you have one</label>
+		                <div class="input-group w-75 couponcode-wrap">
+		                  <input type="text" class="form-control me-2" id="c_code" placeholder="Coupon Code" aria-label="Coupon Code" aria-describedby="button-addon2">
+		                  <div class="input-group-append">
+		                    <button class="btn btn-black btn-sm" type="button" id="button-addon2">Apply</button>
+		                  </div>
+		                </div>
+
+		              </div>
+		            </div>
+		          </div>
+
+				 
+				
+		          <div class="row mb-5">
+		            <div class="col-md-12">
+		              <h2 class="h3 mb-3 text-black">Your Order</h2>
+		              <div class="p-3 p-lg-5 border bg-white">
+		                <table class="table site-block-order-table mb-5">
+		                  <thead>
+		                    <th>Product</th>
+		                    <th>Total</th>
+		                  </thead>
+		                  <tbody>
+						 <%cartData.forEach(i=>{%>
+		                    <tr>
+		                      <td><%=i.productId.productName%> <strong class="mx-2">x</strong><%=i.quantity%></td>
+		                      <td><%=i.totals%></td>
+		                    </tr>
+							<%})%>
+		                    <tr>
+		                      <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
+		                      <td class="text-black">$350.00</td>
+		                    </tr>
+		                    <tr>
+		                      <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
+		                      <td class="text-black font-weight-bold"><strong>$350.00</strong></td>
+		                    </tr>
+		                  </tbody>
+		                </table>
+
+		                <div class="border p-3 mb-3">
+		                  <h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsebank" role="button" aria-expanded="false" aria-controls="collapsebank">Cash on delivery</a></h3>
+
+		                  <div class="collapse" id="collapsebank">
+		                    <div class="py-2">
+		                      <p class="mb-0">
+								<label class="checkbox">
+									<span style="display:block;"><strong>**Pay when you receive it!** </strong>Choose Cash on Delivery and pay in cash to the delivery person upon receiving your order.</span>
+
+								<input type="checkbox" class="mt-4 inputcheck">
+								Cash on delivery</a>
+							  </label></p>
+		                    </div>
+		                  </div>
+		                </div>
+
+		                <div class="border p-3 mb-3">
+		                  <h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsecheque" role="button" aria-expanded="false" aria-controls="collapsecheque">Cheque Payment</a></h3>
+
+		                  <div class="collapse" id="collapsecheque">
+		                    <div class="py-2">
+		                      <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
+		                    </div>
+		                  </div>
+		                </div>
+
+		                <div class="border p-3 mb-5">
+		                  <h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsepaypal" role="button" aria-expanded="false" aria-controls="collapsepaypal">Paypal</a></h3>
+
+		                  <div class="collapse" id="collapsepaypal">
+		                    <div class="py-2">
+		                      <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
+		                    </div>
+		                  </div>
+		                </div>
+
+		                <div class="form-group">
+		                  <button class="btn btn-black btn-lg py-3 btn-block" id="placeorder">Place Order</button>
+		                </div>
+
+		              </div>
+		            </div>
+		          </div>
+
+		        </div>
+		      </div>
+		      <!-- </form> -->
+		    </div>
+		  </div>
+
+		  <%- include("./partials/cartfooter.ejs")%>
+
+		<script src="/js/bootstrap.bundle.min.js"></script>
+		<script src="/js/tiny-slider.js"></script>
+		<scrip src="/js/custom.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/notyf@3"></script>
+		<script>
+			 const notyf = new Notyf({
+        position: {
+            x: 'right',
+            y: 'top',
+        }});
+			let isAddress=false;
+			let isPayment=false;
+			let paymenttype;
+			let addressId;
+			document.addEventListener('DOMContentLoaded',function(){
+				const addaddressbtn=document.getElementById('faddaddressbtn');
+				const addresserror=document.getElementById('addresserror');
+				addaddressbtn.addEventListener('click',function(){
+				const country = document.getElementById('fcountry').value;
+				const mobileno=document.getElementById('fphone').value;
+				const zipcode=document.getElementById('fzipcode').value;
+				const addressline=document.getElementById('faddressline').value;
+				const city=document.getElementById("fcity").value;
+				const state=document.getElementById("fstate").value;
+				const name=document.getElementById("fname").value;
+				const type=document.getElementById("ftype").value;
+				const formData={country,mobileno,zipcode,addressline,city,state,name,type}
+				axios.post('/addaddress',formData).then((response)=>{
+					if(response.data===true){
+						addresserror.textContent="address addedd succesfully";
+						window.location.reload();
+					}else{
+						addresserror.textContent=response.data;
+					}
+				}).catch((error)=>{console.log(error.message)});
+				})
+
+			   document.querySelectorAll('.addressradio').forEach(i=>{
+				i.addEventListener('click',function(){
+					isAddress=true;
+					addressId=this.value;
+					console.log(isAddress,addressId)
+
+				})
+			   })
+			   console.log(isAddress,addressId)
+			   document.querySelectorAll('.inputcheck').forEach(i=>{
+				i.addEventListener('click',function(){
+					console.log('hii');
+					isPayment=true;
+					paymenttype=this.checked;
+					console.log(isPayment,paymenttype);
+
+				})
+			   })
+			   })
+			   document.getElementById('placeorder').addEventListener('click',function(){
+				if(isPayment&&paymenttype){
+					console.log('proceed with place order');
+					const formData={paymenttype,addressId};
+					axios.post('/cart/placeorder',{formData}).then((response)=>{
+						window.location.href='/cart/orderconfirm/'
+					}).catch(function(error){
+						console.log(error.message);
+					})
+				}else{
+					notyf.error('select payment and address for placing order');
+				}
+				console.log('placeorder');
+			   })
+		</script>			
+			
+	</body>
+
+</html>

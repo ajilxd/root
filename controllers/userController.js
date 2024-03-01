@@ -2,12 +2,14 @@ const {
   signupSchema,
   signinSchema,
   addressSchema,
+  editProfileSchema,
 } = require("../helpers/valiadator");
 const User = require("../models/userModel");
 const { hashPassword, comparePasswords } = require("../middleware/bcrypt");
 const Address = require("../models/addressModel");
 const { isLogin, isLogout } = require("../middleware/auth");
 const productModel = require("../models/productModel");
+const addressModel = require("../models/addressModel");
 
 const loadHomepage = async (req, res) => {
   try {
@@ -110,18 +112,27 @@ const shopLoader = async (req, res) => {
 
 const addAddressDb = async (req, res) => {
   try {
-    console.log(req.body);
-    console.log(Object.keys(req.body));
-    const { type, name, addressline, city, state, zip, country, mobileno } =
+    const userId = req.session.user._id;
+    const { type, name, addressline, city, state, zipcode, country, mobileno } =
       req.body;
-    const existingAddress = await Address.find({ type: type });
-    if (existingAddress) {
+    const existingAddress = await Address.findOne({ _id: userId, type: type });
+    console.log("existinggggggggggggggggggggg", existingAddress);
+    if (Boolean(existingAddress)) {
       return res.json("There is an existing address ");
     }
     const validation = await addressSchema.validateAsync(req.body);
-    const addressData = await new Address(req.body);
+    const addressData = await new Address({
+      type: type,
+      name: name,
+      addressline: addressline,
+      city: city,
+      state: state,
+      zipcode: zipcode,
+      country: country,
+      mobileno: mobileno,
+      userId: userId,
+    });
     await addressData.save();
-    console.log(validation);
     res.json(true);
   } catch (error) {
     res.json(error.message);
@@ -129,6 +140,87 @@ const addAddressDb = async (req, res) => {
   }
 };
 
+const changePasswordDb = async (req, res) => {
+  try {
+    const userDb = await User.findById(req.session.user._id);
+    const oldpassword = req.body.oldpassword;
+    const dbpassword = userDb.password;
+    const newpassword = req.body.confirmnewpassword;
+    console.log("edit password", req.body);
+    const validpassword = await comparePasswords(oldpassword, dbpassword);
+    // const hashednewpassword = await hashPassword(newpassword);
+    console.log(validpassword);
+    if (validpassword) {
+      await User.updateOne(
+        { _id: req.session.user._id },
+        { $set: { password: await hashPassword(newpassword) } }
+      );
+      res.json("success");
+    } else {
+      res.json("failture");
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const editProfileHandler = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { name, gender, email, mobileno } = req.body;
+    const userId = req.session.user._id;
+    const existUser = await User.findOne({ email: email });
+    if (existUser) {
+      return res.json("Email is already taken");
+    }
+    const validation = await editProfileSchema.validateAsync(req.body);
+    await User.updateOne(
+      { _id: userId },
+      {
+        $set: {
+          name: name,
+          gender: gender,
+          email: email,
+          mobilenumber: mobileno,
+        },
+      }
+    );
+    res.json(true);
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
+const editAddresshandler = async (req, res) => {
+  try {
+    console.log(req.body);
+    const addressId = req.params.id;
+
+    const { formData } = req.body;
+    const validation = await addressSchema.validateAsync(formData);
+    const { name, addressline, city, state, zipcode, country, mobileno, type } =
+      formData;
+    await addressModel.updateOne(
+      { userId: req.session.user._id },
+      {
+        $set: {
+          type: type,
+          name: name,
+          addressline,
+          city: city,
+          state: state,
+          zipcode: zipcode,
+          country: country,
+          mobileno: mobileno,
+        },
+      }
+    );
+    res.json(true);
+  } catch (error) {
+    res.json(error.message);
+    console.log(error.message);
+  }
+};
 module.exports = {
   loadHomepage,
   loadloginpage,
@@ -139,4 +231,7 @@ module.exports = {
   shopLoader,
   addAddressDb,
   logoutFn,
+  changePasswordDb,
+  editProfileHandler,
+  editAddresshandler,
 };

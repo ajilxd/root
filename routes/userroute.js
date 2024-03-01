@@ -18,5 +18,17 @@ userRoute.get("/logout", userController.logoutFn);
 
 userRoute.get("/cart", isLogin, cartController.cartLoader);
 userRoute.get("/addtocart/:id", cartController.addToCart);
-userRoute.post("/cart/quantitychange/:id", cartController.quantityUpdate);
+userRoute.post(
+  "/cart/quantitychange/:id",
+  isLogin,
+  cartController.quantityUpdate
+);
+userRoute.post("/cart/removecart/:id", isLogin, cartController.removeFromCart);
+userRoute.get("/cart/checkout", isLogin, cartController.checkOutLoader);
+userRoute.post("/cart/placeorder/", cartController.placeorderdb);
+userRoute.get("/cart/orderconfirm/", cartController.orderconfirmloader);
+
+userRoute.post("/changepassword", userController.changePasswordDb);
+userRoute.post("/editprofile", userController.editProfileHandler);
+userRoute.post("/editAddress/:id", userController.editAddresshandler);
 module.exports = userRoute;

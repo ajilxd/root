@@ -1,6 +1,7 @@
 
 
 <%- include("./header.ejs")%>
+<link href="https://cdn.jsdelivr.net/npm/notyf@3/dist/notyf.min.css" rel="stylesheet">
 <%- include("./partials/navbar.ejs")%>
 
 
@@ -22,13 +23,12 @@
 		<!-- End Hero Section -->
 
 		
-
+    
 		<div class="untree_co-section before-footer-section  " >
-            <div class="container">
+            <div class="container" id="">
               <div class="row mb-5">
-                <form class="col-md-12" method="post">
-                  <div class="site-blocks-table">
-                    <table class="table">
+                  <div class="site-blocks-table" >
+                    <table class="table" >
                       <thead>
                         <tr>
                           <th class="product-thumbnail">Image</th>
@@ -41,7 +41,7 @@
                       </thead>
                       <tbody>
                         <%cartData.forEach((i,index)=>{%>
-                        <tr>
+                        <tr id="reloadDiv">
                           <td class="product-thumbnail">
                             <img src='/multer/products/<%= i.productId.image[0] %>' alt="Image" style="height:100px" class="img-fluid">
                           </td>
@@ -52,23 +52,22 @@
                           <td>
                             <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
                               <div class="input-group-prepend">
-                                <button class="btn btn-outline-black decrease" type="button" data-price="<%=i.productId.price%>">&minus;</button>
+                                <button class="btn btn-outline-black decrease" type="button" data-id="<%=i._id%>" data-price="<%=i.productId.price%>">&minus;</button>
                               </div>
                               <input type="text" class="form-control text-center quantity-amount"  value="1"id="count<%=index%>" >
                               <div class="input-group-append">
-                                <button class="btn btn-outline-black increase" type="button" data-price="<%=i.productId.price%>">&plus;</button>
+                                <button class="btn btn-outline-black increase" type="button" data-id="<%=i._id%>" data-price="<%=i.productId.price%>">&plus;</button>
                               </div>
                             </div>
         
                           </td>
                           <td class="itemtotals" id="itemtotals<%=index%>" ><%=i.totals%></td>
-                          <td><a href="#" class="btn btn-black btn-sm">X</a></td>
+                          <td><button class="btn btn-black btn-sm removebtns" data-id="<%=i._id%>">remove</button></td>
                         </tr>
                         <%})%>
                       </tbody>
                     </table>
                   </div>
-                </form>
               </div>
         
               <div class="row mt-5 pt-5">
@@ -121,7 +120,7 @@
         
                       <div class="row">
                         <div class="col-md-12">
-                          <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='checkout.html'">Proceed To Checkout</button>
+                          <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='/cart/checkout'">Proceed To Checkout</button>
                         </div>
                       </div>
                     </div>
@@ -132,11 +131,30 @@
           </div>
 		
 		  <%- include("./partials/cartfooter.ejs")%>
-
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		  <script src="js/bootstrap.bundle.min.js"></script>
 		<script src="js/tiny-slider.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3"></script>
     <script>
+      const notyf = new Notyf({
+        position: {
+            x: 'right',
+            y: 'top',
+        }});
+        const customOptions = {
+          type: 'error',
+          'background-color': '#e54141', 
+          message: 'product removed from cart!',
+          duration: 2000,
+          ripple: true,
+          position: { x: 'right', y: 'top' },
+          dismissible: true,
+          className: 'custom-notification'
+};
+
+
       let sum=0;
       prices=document.querySelectorAll('.itemtotals');
       prices.forEach(i=>{
@@ -149,31 +167,63 @@
         const incrementButtons = document.querySelectorAll('.increase');
         incrementButtons.forEach((button, index) => {
           let count = document.getElementById(`count${index}`);
-          button.addEventListener('click', function() {
+          button.addEventListener('click',async function() {
             console.log('Increment clicked');
            const unitprice = this.getAttribute('data-price');
+           const cartId = this.getAttribute('data-id');
            console.log(unitprice);
+           console.log(cartId);
             if (Number(count.value) < 10) {
               count.value = Number(count.value) + 1;
               document.getElementById(`itemtotals${index}`).textContent=Number(count.value)*unitprice;
               document.getElementById('SumOfAllProducts').textContent= Number(document.getElementById('SumOfAllProducts').textContent)+Number(unitprice);
             }
+            const quantity=count.value;
+            await axios.post(`/cart/quantitychange/${cartId}`,{quantity})
           });
         });
     
         const decrementButtons = document.querySelectorAll('.decrease');
         decrementButtons.forEach((button, index) => {
           let count = document.getElementById(`count${index}`);
-          button.addEventListener('click', function() {
+          button.addEventListener('click', async function() {
             console.log('Decrement clicked');
             const unitprice = this.getAttribute('data-price');
+            const cartId = this.getAttribute('data-id');
+            console.log(cartId);
             if (Number(count.value) > 1) {
               count.value = Number(count.value) - 1;
               document.getElementById(`itemtotals${index}`).textContent=Number(count.value)*unitprice;
               document.getElementById('SumOfAllProducts').textContent= Number(document.getElementById('SumOfAllProducts').textContent)-Number(unitprice);
             }
+            const quantity=count.value;
+            console.log(quantity);
+            await axios.post(`/cart/quantitychange/${cartId}`,{quantity})
           });
         });
+
+        const removebtns=document.querySelectorAll('.removebtns');
+        console.log(removebtns);
+        removebtns.forEach(i=>{
+          i.addEventListener('click', function(){
+            console.log('remove');
+            const cartid=this.getAttribute('data-id');
+            axios.post(`/cart/removecart/${cartid}`).then(()=>{
+              console.log('product removed');
+            }).catch((error)=>{
+              console.log(error.message);
+            })
+            
+          
+            
+           
+           location.reload();
+
+          })
+        
+        })
+      
+
       });
     </script>
     
@@ -182,11 +232,3 @@
 	</body>
 
 </html>
-document.addEventListener("DOMContentLoaded", function () {
-  let sum=0;
-  prices=document.querySelectorAll('.itemtotals');
-  prices.forEach(i=>{
-     sum +=Number(i.textContent);
-    })
-   document.getElementById('SumOfAllProducts').textContent=sum;
-  });
