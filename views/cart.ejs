@@ -135,7 +135,7 @@
 
 		  <script src="js/bootstrap.bundle.min.js"></script>
 		<script src="js/tiny-slider.js"></script>
-		<!-- <script src="js/custom.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
       let sum=0;
       prices=document.querySelectorAll('.itemtotals');
@@ -151,10 +151,12 @@
           let count = document.getElementById(`count${index}`);
           button.addEventListener('click', function() {
             console.log('Increment clicked');
-           const unitprice = this.getAttribute('data-price')
+           const unitprice = this.getAttribute('data-price');
+           console.log(unitprice);
             if (Number(count.value) < 10) {
               count.value = Number(count.value) + 1;
               document.getElementById(`itemtotals${index}`).textContent=Number(count.value)*unitprice;
+              document.getElementById('SumOfAllProducts').textContent= Number(document.getElementById('SumOfAllProducts').textContent)+Number(unitprice);
             }
           });
         });
@@ -164,8 +166,11 @@
           let count = document.getElementById(`count${index}`);
           button.addEventListener('click', function() {
             console.log('Decrement clicked');
+            const unitprice = this.getAttribute('data-price');
             if (Number(count.value) > 1) {
               count.value = Number(count.value) - 1;
+              document.getElementById(`itemtotals${index}`).textContent=Number(count.value)*unitprice;
+              document.getElementById('SumOfAllProducts').textContent= Number(document.getElementById('SumOfAllProducts').textContent)-Number(unitprice);
             }
           });
         });
