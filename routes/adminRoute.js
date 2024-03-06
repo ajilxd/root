@@ -33,6 +33,8 @@ adminRoute.post(
 );
 adminRoute.post("/editcategory/:id", adminController.editcategoryDb);
 
+adminRoute.get("/reviews", adminController.reviewsLoader);
+
 // logout
 adminRoute.get("/logout", isAdminLogout);
 

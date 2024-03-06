@@ -2,6 +2,10 @@ const adminModal = require("../models/adminModel");
 const { categorySchema, productSchema } = require("../helpers/valiadator");
 const productModel = require("../models/productModel");
 const categoryModel = require("../models/categoryModel");
+const userModel=require('../models/userModel');
+
+
+
 
 const adminLoginLoader = async (req, res) => {
   try {
@@ -239,6 +243,15 @@ const editProductDb = async (req, res) => {
     res.json(true);
   } catch (error) {
     res.json(error.message);
+  }
+};
+
+const userLoader = async (req, res) => {
+  try {
+    const 
+    res.render('users')
+  } catch (error) {
+    console.log(error.message);
   }
 };
 
