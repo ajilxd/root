@@ -31,11 +31,33 @@ adminRoute.post(
   upload.array("files", 4),
   adminController.editProductDb
 );
-adminRoute.post("/editcategory/:id", adminController.editcategoryDb);
+adminRoute.post(
+  "/editcategory/:id",
+  isAdminLogin,
+  adminController.editcategoryDb
+);
 
-adminRoute.get("/reviews", adminController.reviewsLoader);
+adminRoute.get("/orders", isAdminLogin, adminController.ordersLoader);
 
+adminRoute.get(
+  "/orderdetails/:id",
+  isAdminLogin,
+  adminController.orderDetailsLoader
+);
 // logout
-adminRoute.get("/logout", isAdminLogout);
+adminRoute.get("/logout", adminController.logOutAdmin);
+
+adminRoute.post("/changestatus", adminController.orderStatusUpdate);
+
+adminRoute.get("/users", adminController.userLoader);
+
+adminRoute.post("/blockuser/:id", adminController.blockUser);
+adminRoute.post("/unblockuser/:id", adminController.unblockUser);
+
+adminRoute.post("/cancelapproved", adminController.cancelApprovedHandler);
+adminRoute.post("/canceldiscard", adminController.cancelDiscardHandler);
+adminRoute.post("/returnapproved", adminController.returnApprovedHandler);
+adminRoute.post("/returndiscard", adminController.returnDiscardHandler);
+adminRoute.get("/reviews", adminController.loadReviews);
 
 module.exports = adminRoute;

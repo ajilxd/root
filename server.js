@@ -33,6 +33,7 @@ const user_route = require("../root/routes/userroute");
 const otp_route = require("./routes/otpRoute");
 const admin_route = require("./routes/adminRoute");
 const profile_route = require("./routes/profileRoute");
+const review_route = require("./routes/reviewRoute");
 
 app.use("/", user_route);
 
@@ -42,4 +43,9 @@ app.use("/admin", admin_route);
 
 app.use("/profile", profile_route);
 
-app.listen(8000, (req, res) => console.log(`Server started running`));
+app.use("/review", review_route);
+
+app.listen(8000, (req, res) =>
+  console.log(`Server started running at 
+http://localhost:8000`)
+);

@@ -1,156 +1,201 @@
 <%- include("./header.ejs")%>
 <%- include("./partials/navbar.ejs")%>
+
 <style>
+    .height-100 {
+    height: 100vh
+}
 
-    </style>
-    		<div class="hero">
-    			<div class="container">
-    				<div class="row justify-content-between">
-    					<div class="col-lg-5">
-    						<div class="intro-excerpt">
-    							<h1>Cart</h1>
-    						</div>
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    <section id="cartsection">
-    	<div class="untree_co-section before-footer-section" >
-            <div class="container">
-              <div class="row mb-5">
-                <form class="col-md-12" method="post">
-                  <div class="site-blocks-table">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th class="product-thumbnail">Image</th>
-                          <th class="product-name">Product</th>
-                          <th class="product-price">Price</th>
-                          <th class="product-quantity">Quantity</th>
-                          <th class="product-total">Total</th>
-                          <th class="product-remove">Remove</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <%cartData.forEach((i,index)=>{%>
-                        <tr>
-                          <td class="product-thumbnail">
-                            <img src="multer/products/<%=i.productId.image[0]%>" alt="Image" class="img-fluid" style="height: 100px;">
-                          </td>
-                          <td class="product-name">
-                            <h2 class="h5 text-black"><%=i.productId.productName%></h2>
-                          </td>
-                          <td><%=i.price%></td>
-                          <td>
-                            <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-                              <div class="input-group-prepend">
-                                <button class="btn btn-outline-black  decrement " type="button" data-id="<%= i._id %>">&minus;</button>
-                              </div>
-                              <input class="form-control text-center quantity-amount" id="count<%=index%>" value="<%=i.quantity%>" disabled>
-                              <div class="input-group-append">
-                                <button class="btn btn-outline-black increment" type="button" data-id="<%= i._id %>">&plus;</button>
-                              </div>
-                            </input>
+.card {
+    width: 400px;
+    border: none;
+    height: 300px;
+    box-shadow: 0px 5px 20px 0px #d2dae3;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
 
-                          </td>
-                          <td><%=i.totals%></td>
-                          <td><a href="#" class="btn btn-black btn-sm  removebutton"   value="<%=i._id%>">X</a></td>
-                        </tr>
-                        <%})%>
-                      </tbody>
-                    </table>
-                  </div>
-                </form>
-              </div>
-            </section>
-              <div class="row px-5 mx-5">
-                <div class="col-md-6">
-                  <div class="row mb-5">
-                    <div class="col-md-6 mb-3 mb-md-0">
-                      <button class="btn btn-black btn-sm btn-block">Update Cart</button>
+.card h6 {
+    color: red;
+    font-size: 20px
+}
+
+.inputs input {
+    width: 40px;
+    height: 40px
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0
+}
+
+.card-2 {
+    background-color: #fff;
+    padding: 10px;
+    width: 350px;
+    height: 100px;
+    bottom: -50px;
+    left: 20px;
+    position: absolute;
+    border-radius: 5px
+}
+
+.card-2 .content {
+    margin-top: 50px
+}
+
+.card-2 .content a {
+    color: red
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border: 2px solid red
+}
+
+.validate {
+    border-radius: 20px;
+    height: 40px;
+    background-color: red;
+    border: 1px solid red;
+    width: 140px
+}
+</style>
+<div class="container is-flex is-align-items-center is-justify-content-center" style="height: 600px;">
+    <form action="/otp" method="post" id="otpform">
+        <div class="container height-100 d-flex justify-content-center align-items-center">
+            <div class="position-relative">
+                <div class="card p-2 text-center">
+                    <h6 class="text-primary ">Please enter the one time password <br> to verify your account</h6>
+                    <div> <span>A code has been sent to</span> <small>*******9897</small> </div>
+                    <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2"> 
+                    <input class="m-2 text-center form-control rounded otpinput" type="text" id="first" name="one" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otpinput" type="text" id="second" name="two" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otpinput" type="text" id="third" name="three" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otpinput" type="text" id="fourth" name="four" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otpinput" type="text" id="fifth" name="five" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otpinput" type="text" id="sixth" name="six" maxlength="1" />
                     </div>
-                    <div class="col-md-6">
-                      <button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <label class="text-black h4" for="coupon">Coupon</label>
-                      <p>Enter your coupon code if you have one.</p>
-                    </div>
-                    <div class="col-md-8 mb-3 mb-md-0">
-                      <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
-                    </div>
-                    <div class="col-md-4">
-                      <button class="btn btn-black">Apply Coupon</button>
-                    </div>
-                  </div>
+                    <div class="mt-4"> <button class="button is-primary" id="submitOtpBtn" type="submit" >Validate</button> </div>
+                    <div id="errorMessage" class="mt-3 text-danger "></div>
+                    <div id="otpTimer" class="has-text-centered mt-3"></div>
                 </div>
-                <div class="col-md-6 pl-5">
-                  <div class="row justify-content-end">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="col-md-12 text-right border-bottom mb-5">
-                          <h3 class="text-black h4 text-uppercase">Cart Totals </h3>
-                        </div>
-                      </div>
-                      <div class="row mb-3">
-                        <div class="col-md-6">
-                          <span class="text-black">Subtotal</span>
-                        </div>
-                        <div class="col-md-6 text-right">
-                          <strong class="text-black"><span id="SumOfAllProducts">0</span></strong>
-                        </div>
-                      </div>
-                      <div class="row mb-5">
-                        <div class="col-md-6">
-                          <span class="text-black">Total</span>
-                        </div>
-                        <div class="col-md-6 text-right">
-                          <strong class="text-black"><span id="SumOfAllProducts">0</span></strong>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-12">
-                          <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='checkout.html'">Proceed To Checkout</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-
-          <%- include("./partials/cartfooter.ejs")%>
-    	<script src="js/bootstrap.bundle.min.js"></script>
-    	<script src="js/tiny-slider.js"></script>
-    	<script src="js/custom.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+        </div>
+    </form>
+</div>
+<%- include("./footer.ejs")%>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+     var notyf = new Notyf();
+    document.addEventListener("DOMContentLoaded", function(event) {
+        // OTP input fields
+        const first = document.getElementById('first');
+        const second = document.getElementById('second');
+        const third = document.getElementById('third');
+        const fourth = document.getElementById('fourth');
+        const fifth = document.getElementById('fifth');
+        const sixth = document.getElementById('sixth');
 
-    //decrement of counter
-    const decbtns =Array.from(document.getElementsByClassName('decrement'));
-    decbtns.map(i=>{
-      i.addEventListener('click',function(){
-        console.log('hi')
-      });
-    })
-    //increment of counter
-    const incbtns =Array.from(document.getElementsByClassName('increment'));
-    incbtns.map(i=>{
-      i.addEventListener('click',function(){
-        console.log('hi')
-      });
-    })
-   })
+        const errorMessage = document.getElementById('errorMessage');
+
+        function OTPInput() {
+            const inputs = document.querySelectorAll('#otp > *[id]');
+
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].addEventListener('input', function(event) {
+                    if (event.inputType === 'deleteContentBackward' && i !== 0) {
+                        inputs[i - 1].focus();
+                    } else if (event.inputType === 'insertText') {
+                        if (i < inputs.length - 1) {
+                            inputs[i + 1].focus();
+                        }
+                    }
+                });
+            }
+        }
+
+        OTPInput();
+
+        const form = document.getElementById('otpform');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let allNums = true;
+            document.querySelectorAll('.otpinput').forEach(input => {
+                if (isNaN(Number(input.value))) {
+                    allNums = false;
+                }
+            });
+
+            if (!allNums) {
+                errorMessage.textContent = "Enter numbers only";
+                setTimeout(function() {
+                    errorMessage.textContent = "";
+                }, 3000);
+                return;
+            }
+
+            const firstValue = first.value;
+            const secondValue = second.value;
+            const thirdValue = third.value;
+            const fourthValue = fourth.value;
+            const fifthValue = fifth.value;
+            const sixthValue = sixth.value;
+
+            if (firstValue && secondValue && thirdValue && fourthValue && fifthValue && sixthValue) {
+                axios.post('/otp', {
+                    first: firstValue,
+                    second: secondValue,
+                    third: thirdValue,
+                    fourth: fourthValue,
+                    fifth: fifthValue,
+                    sixth: sixthValue
+                })
+                .then((response) => {
+                    console.log(response.data);
+                    if(response.data===true){
+                        notyf.success('Your account has been created!');
+                        clearInterval(countdown);
+                        document.getElementById('otpTimer').textContent='Your account has been created!'
+                        setTimeout(function(){
+                            window.location.href='/login'
+                        },4000)
+
+                    }else if(response.data===false){
+                        document.getElementById('otpTimer').textContent='invalid otp!'
+                    }
+                })
+                .catch((error) => {
+                    console.log(error.message);
+                });
+            } else {
+                errorMessage.textContent = "OTP fields can't be empty";
+                setTimeout(function() {
+                    errorMessage.textContent = "";
+                }, 3000);
+            }
+        });
+
+        // Simple countdown timer for 60 seconds
+        let timer = 60;
+        const countdown = setInterval(() => {
+            document.getElementById('otpTimer').textContent = timer;
+            timer--;
+
+            if (timer < 0) {
+                clearInterval(countdown);
+                document.getElementById('otpTimer').textContent='otp expired'
+            }
+        }, 1000);
+    });
 
 </script>
-
-    </body>
-
-</html>

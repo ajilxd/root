@@ -1,39 +1,66 @@
 <%- include("./header.ejs")%>
-<link href="https://cdn.jsdelivr.net/npm/notyf@3/dist/notyf.min.css" rel="stylesheet">
 <%- include("./partials/navbar.ejs")%>
-		
-		<!-- Start Hero Section -->
-			<div class="hero">
-				<div class="container">
-					<div class="row justify-content-between">
-						<div class="col-lg-5">
-							<div class="intro-excerpt">
-								<h1>Shop</h1>
-							</div>
-						</div>
-						<div class="col-lg-7">
-							
-						</div>
-					</div>
+<div class="hero">
+	<div class="container">
+		<div class="row justify-content-between">
+			<div class="col-lg-5">
+				<div class="intro-excerpt">
+					<h1><%if(catname){%><%=catname%><%}else{%>Shop<%}%></h1>
 				</div>
 			</div>
-		<!-- End Hero Section -->
+			
+		</div>
+	</div>
+</div>
 
-		<div class="untree_co-section product-section before-footer-section">
+		<div class="untree_co-section product-section before-footer-section" >
 		    <div class="container">
-		      	<div class="row">
+				<div  class="row mb-5 "> 
+					<div >
+						<div class="dropdown show">
+							<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" >
+							  category
+							</a>
+							
+							<div class="dropdown-menu " >
+								<%catData.forEach(i=>{%>
+							  <a class="dropdown-item" href="/rendercategory/<%=i._id%>"><%=i.categoryName%></a>
+							  <%})%>
+							</div>
+
+						  </div>
+						  <div class="dropdown show mx-5">
+							<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" >
+							  sort
+							</a>
+							
+							<div class="dropdown-menu" >
+								
+							  <a class="dropdown-item" href="/products/sort/A-Z">A-Z</a>
+							  <a class="dropdown-item" href="/products/sort/Z-A">Z-A</a>
+							  
+							  
+							</div>
+
+						  </div>
+					</div>
+				</div>
+		      	<div class="row mt-5">
 					<% productData.forEach(i=>{%>
 		      		<!-- Start Column 1 -->
 					<div class="col-12 col-md-4 col-lg-3 mb-5">
-						<a class="product-item" href="/productdetail/<%= i._id %>">
+						<a class="product-item" id ="productdetails" href="/productdetail/<%= i._id %>">
 							<img src="\multer\products\<%=i.image[0]%>" class="img-fluid product-thumbnail">
 							<h3 class="product-title"><%=i.productName%></h3>
 						</a>
 						<div class="d-flex justify-content-around ">
 							<strong class="product-price"><%=i.price%>₹</strong>
-						    
+							<%if(i.quantity<1){%><span class="text-danger fw-bold lead">No stock</span><%}else{%>
+						    <span class="btn btn-close-white addTowishBtns"  data-id ='<%= i._id %>' data-name="<%= i.productName %>"><i class="fa-sharp fa-regular fa-heart"></i></span>
 							<button class="btn btn-close-white addToCartBtns"  data-id ='<%= i._id %>' data-name="<%= i.productName %>">Add to cart</button>
+							<%}%>
 						</div>
+						
 					</div> 
 					<!-- End Column 1 -->
 					<%})%>
@@ -57,8 +84,10 @@
             y: 'top',
         }
     });
-
+	
+	
 const addToCartBtns= Array.from(document.getElementsByClassName('addToCartBtns'));
+const wishListbtns = Array.from(document.getElementsByClassName('addTowishBtns'));
 	addToCartBtns.forEach(i => {
 		i.addEventListener("click", function () {
 		console.log('clicked')
@@ -79,6 +108,23 @@ const addToCartBtns= Array.from(document.getElementsByClassName('addToCartBtns')
         });
     });
 	});
+
+	wishListbtns.forEach(i=>{
+		i.addEventListener('click',function(){
+			const productid =this.getAttribute('data-id');
+			const productname =this.getAttribute('data-name');
+			axios.post('/addtowishlist',{productid}).then((response)=>{
+				if(response.data==true){
+					notyf.success(`${productname} is added to your wishlist succesfully!`); 
+				}else if(response.data=='nosession'){
+					notyf.error(`You should be logged in to add items to the wishlist`)
+				}
+			}).catch((error)=>{
+				console.log(error.message)
+			})
+		})
+	})
+	
 })
 </script>
 	</body>
