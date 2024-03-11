@@ -1,357 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders Dashboard</title>
+<style>
+    /* Add your CSS styles here */
+</style>
+</head>
+<body>
+
 <%- include("./partials/header.ejs")%>
 <%- include("./partials/sidebar.ejs")%>
-        <main class="main-wrap">
-            <%- include("./partials/nav.ejs")%>
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Order List</h2>
-                        <p>Lorem ipsum dolor sit amet.</p>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
-                    </div>
+
+<main class="main-wrap">
+    <%- include("./partials/nav.ejs")%>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Orders</h2>
+                <p>Order management</p>
+            </div>
+            <div>
+                <input type="text" placeholder="Search by name" class="form-control bg-white" />
+            </div>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="d-flex">
+                    <button class="tablink btn btn-light mx-3" onclick="openTab(event, 'allorders')">Your Orders</button>
+                    <button class="tablink btn btn-light mx-3" onclick="openTab(event, 'cancelRequests')">Cancel requests</button>
+                    <button class="tablink btn btn-light mx-3" onclick="openTab(event, 'returnedRequests')">Return requests</button>
                 </div>
-                <div class="card mb-4">
-                    <header class="card-header">
-                        <div class="row gx-3">
-                            <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" />
-                            </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Status</option>
-                                    <option>Active</option>
-                                    <option>Disabled</option>
-                                    <option>Show all</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Show 20</option>
-                                    <option>Show 30</option>
-                                    <option>Show 40</option>
-                                </select>
-                            </div>
-                        </div>
-                    </header>
-                    <!-- card-header end// -->
-                    <div class="card-body">
+            </header>
+            <div class="card-body tab mt-5 ms-3">
+                <div id="allorders" class="tab-content">
+                    <!-- All Orders Content -->
+                    
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>#ID</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Total</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col" class="text-end">Action</th>
+                                        
+                                        <th>#OrderId</th>
+                                        <th>Name</th>
+                                        <th>email</th>
+                                        <th>Totals</th>
+                                        <th>OrderPlacedDate</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                 <%orderData.forEach((i,index)=>{%>
                                     <tr>
-                                        <td>0901</td>
-                                        <td><b>Marvin McKinney</b></td>
-                                        <td>marvin@example.com</td>
-                                        <td>$9.00</td>
-                                        <td><span class="badge rounded-pill alert-warning">Pending</span></td>
-                                        <td>03.12.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
+                                        
+                                        <td><%=i.orderId%></td>
+                                        <td><b><%=i.userId?.name%></b></td>
+                                        <td><%=i.userId?.email%></td>
+                                        <td>
+                                            <%=i.orderAmount%>
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2323</td>
-                                        <td><b>Leslie Alexander</b></td>
-                                        <td>leslie@example.com</td>
-                                        <td>$46.61</td>
-                                        <td><span class="badge rounded-pill alert-warning">Pending</span></td>
-                                        <td>21.02.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
+                                        <td><%=i.createdAt%></td>
+                                        <td >
+                                          <%=i.status%>
+                                                 
                                         </td>
+                                        <td><button class="btn btn-light btn-sm orderdetailsbtns " data-id="<%=i.orderId%>">more</button></td>
                                     </tr>
-                                    <tr>
-                                        <td>1233</td>
-                                        <td><b>Esther Howard</b></td>
-                                        <td>esther@example.com</td>
-                                        <td>$12.00</td>
-                                        <td><span class="badge rounded-pill alert-danger">Canceled</span></td>
-                                        <td>03.07.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>1233</td>
-                                        <td><b>Esther Howard</b></td>
-                                        <td>esther@example.com</td>
-                                        <td>$12.00</td>
-                                        <td><span class="badge rounded-pill alert-danger">Canceled</span></td>
-                                        <td>03.07.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2323</td>
-                                        <td><b>Jenny Wilson</b></td>
-                                        <td>jenny@example.com</td>
-                                        <td>$589.99</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>22.05.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2112</td>
-                                        <td><b>Marvin McKinney</b></td>
-                                        <td>marvin@example.com</td>
-                                        <td>$16.58</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>23.04.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>7897</td>
-                                        <td><b>Albert Flores</b></td>
-                                        <td>albert@example.com</td>
-                                        <td>$10.00</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>13.03.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2323</td>
-                                        <td><b>Wade Warren</b></td>
-                                        <td>wade@example.com</td>
-                                        <td>$105.55</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>23.09.2019</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2324</td>
-                                        <td><b>Jane Cooper</b></td>
-                                        <td>jane@example.com</td>
-                                        <td>$710.68</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>28.04.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2325</td>
-                                        <td><b>Savannah Nguyen</b></td>
-                                        <td>savannah@example.com</td>
-                                        <td>$710.68</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>23.03.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2326</td>
-                                        <td><b>Guy Hawkins</b></td>
-                                        <td>guy@example.com</td>
-                                        <td>$767.50</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>28.04.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2327</td>
-                                        <td><b>Darrell Steward</b></td>
-                                        <td>darrel@example.com</td>
-                                        <td>$406.27</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>14.07.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2328</td>
-                                        <td><b>Jane Cooper</b></td>
-                                        <td>jane@example.com</td>
-                                        <td>$601.13</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>18.03.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2329</td>
-                                        <td><b>Darlene Robertson</b></td>
-                                        <td>deriene@example.com</td>
-                                        <td>$948.55</td>
-                                        <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                        <td>03.07.2020</td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
+                                    <%})%>
                                 </tbody>
                             </table>
                         </div>
-                        <!-- table-responsive //end -->
+                        <!-- table-responsive//end -->
+                    
+                </div>
+                <div id="cancelRequests" class="tab-content" style="display: none;">
+                    <!-- Content for cancelled orders tab -->
+                   <div style="height:300px" class="ms-3 ">
+                    <table class="table">
+                        <thead>
+                          
+                          <tr>
+                            <th scope="col">orderID</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Reason</th>
+                            <th scope="col">action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <%cancelData.forEach(i=>{%>  
+                          <tr>
+                            <th scope="row">#<%=i.orderId%></th>
+                            <td><%=i.userId?.name%></td>
+                            <td><%=i.message%></td>
+                            <td>
+                                <button class="is-success button is-small cancelApprove" data-id="<%=i.orderId%>"  data-req-id="<%=i._id%>"  data-user-id="<%=i.userId._id%>">Approve</button>
+                                <button class="is-danger button is-small cancelDiscard" data-req-id="<%=i._id%>" data-user-id="<%=i.userId._id%>">Discard</button>
+                            </td>
+                          </tr>
+                          <%})%>
+                        </tbody>
+                      </table>
+                </div>
+                </div>
+                <div id="returnedRequests" class="tab-content" style="display: none;">
+                    <!-- Content for returned orders tab -->
+
+                    <div style="height:300px">
+                        <table class="table">
+                            <thead>
+                              
+                              <tr>
+                                <th scope="col">orderID</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Reason</th>
+                                <th scope="col">action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <%returnData.forEach(i=>{%>  
+                              <tr>
+                                <th scope="row">#<%=i.orderId%></th>
+                                <td><%=i.userId?.name%></td>
+                                <td><%=i.message%></td>
+                                <td>
+                                    <button class="is-success button is-small returnApprove" data-id="<%=i.orderId%>" data-user-id="<%=i.userId?._id%>" data-req-id="<%=i._id%>">Approve</button>
+                                    <button class="is-danger button is-small returnDiscard"  data-req-id="<%=i._id%>" data-user-id="<%=i.userId?._id%>">Discard</button>
+                                </td>
+                              </tr>
+                              <%})%>
+                            </tbody>
+                          </table>
                     </div>
-                    <!-- card-body end// -->
                 </div>
-              
-                <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </section>
-            <%- include("./partials/footer.ejs")%>
+            </div>
+        </div>
+    </section>
+    <%- include("./partials/footer.ejs")%>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
+        }
+        document.getElementById(tabName).style.display = "block";
+        if (evt) {
+            evt.currentTarget.classList.add("active");
+        }
+    }
+
+    // Set the default tab to display on page load
+    openTab(null, 'allorders');
+
+    // Event delegation for order detail buttons
+    document.querySelector('.card-body').addEventListener('click', function(event) {
+        if (event.target.classList.contains('orderdetailsbtns')) {
+            const orderId = event.target.getAttribute('data-id');
+            window.location.href = `/admin/orderdetails/${orderId}`;
+        }
+    });
+// cancel handling
+    const cancelApproveBtns=document.querySelectorAll('.cancelApprove')
+    const cancelDiscardBtns=document.querySelectorAll('.cancelDiscard')
+    cancelApproveBtns.forEach(i=>{
+        i.addEventListener('click',function(){
+            const orderId =this.getAttribute('data-id');
+            const requestId =this.getAttribute('data-req-id');
+            const userId =this.getAttribute('data-user-id')
+            axios.post('/admin/cancelapproved',{orderId,requestId,userId}).then((response)=>{
+                if(response.data===true){
+                    window.location.reload();
+                }
+            }).catch((error)=>{
+                console.log(error.message)
+            })
+        })
+    })
+   cancelDiscardBtns.forEach(i=>{
+    i.addEventListener('click',function(){
+        const requestId= this.getAttribute('data-req-id');
+        const userId =this.getAttribute('data-user-id')
+        axios.post('/admin/canceldiscard',{requestId,userId}).then((response)=>{
+            if(response.data===true){
+                    window.location.reload();
+                }
+            console.log('cancel discarded')
+        }).catch((error)=>{
+            console.log(error.message)
+        })
+    })
+   })
+
+
+
+// return handling
+    const returnApproveBtns=document.querySelectorAll('.returnApprove')
+    const returnDiscardBtns=document.querySelectorAll('.returnDiscard')
+    returnApproveBtns.forEach(i=>{
+        i.addEventListener('click',function(){
+            const orderId =this.getAttribute('data-id');
+            const requestId =this.getAttribute('data-req-id');
+            const userId =this.getAttribute('data-user-id')
+            axios.post('/admin/returnapproved',{orderId,requestId,userId}).then((response)=>{
+                if(response.data===true){
+                    window.location.reload();
+                }
+                console.log('returned');
+            }).catch((error)=>{
+                console.log(error.message)
+            })
+        })
+    })
+    returnDiscardBtns.forEach(i=>{
+    i.addEventListener('click',function(){
+        const requestId= this.getAttribute('data-req-id');
+        const userId =this.getAttribute('data-user-id')
+        axios.post('/admin/returndiscard',{requestId,userId}).then((response)=>{
+            if(response.data===true){
+                    window.location.reload();
+                }
+            console.log('return discarded')
+        }).catch((error)=>{
+            console.log(error.message)
+        })
+    })
+   })
+    // console.log(returnApproveBtns);
+    // console.log(cancelDiscardBtns);
+
+</script>
+
+</body>
+</html>

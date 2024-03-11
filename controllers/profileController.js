@@ -10,11 +10,11 @@ const profileLoader = async (req, res) => {
       userId: req.session.user._id,
     });
     const userData = await userModel.findOne({ _id: req.session.user._id });
-    console.log(userData);
+    console.log("profileeeeeee", userData);
     res.render("userprofile", {
+      userData,
       orderData: orderData,
       addressData,
-      userData,
     });
   } catch (error) {
     console.log(error.message);

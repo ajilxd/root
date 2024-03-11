@@ -1,14 +1,17 @@
+const User = require("../models/userModel");
+
 const isLogin = async function (req, res, next) {
   if (req.session.user) {
     next();
   } else {
-    console.log(req.session);
+    console.log("session is login", req.session);
     res.redirect("/");
   }
 };
 
 const isLogout = async function (req, res, next) {
   if (req.session.user) {
+    console.log(req.session.user);
     res.redirect("/");
   } else {
     next();
@@ -17,6 +20,7 @@ const isLogout = async function (req, res, next) {
 
 const isAdminLogin = async function (req, res, next) {
   if (req.session.admin) {
+    console.log(req.session);
     next();
   } else {
     res.redirect("/admin/login");
@@ -25,8 +29,20 @@ const isAdminLogin = async function (req, res, next) {
 
 const isAdminLogout = async function (req, res, next) {
   if (req.session.admin) {
-    req.session.admin = null;
-    res.redirect("/admin/login");
+    res.redirect("/admin/home");
+  } else {
+    next();
+  }
+};
+
+const isBlocked = async function (req, res, next) {
+  const userId = req.session.user._id;
+  const userDb = await User.findOne({ _id: userId });
+  if (userDb.isBlocked) {
+    req.session.user = null;
+    res.redirect("/");
+  } else {
+    next();
   }
 };
 
@@ -35,4 +51,5 @@ module.exports = {
   isAdminLogout,
   isLogin,
   isLogout,
+  isBlocked,
 };

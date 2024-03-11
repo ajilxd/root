@@ -22,7 +22,7 @@
                 <div class="dropdown is-right is-hoverable">
                     <div class="dropdown-trigger">
                       <button class="button is-outlined is-success" aria-haspopup="true" aria-controls="dropdown-menu">
-                        <span>user</span>
+                        <span><%if(userData.name){%><%=userData.name%><%}else{%> User<%}%></span>
                         <span class="icon is-small">
                           <i class="fas fa-angle-down" aria-hidden="true"></i>
                         </span>
@@ -30,16 +30,25 @@
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                       <div class="dropdown-content">
-                        <a href="/login" class="dropdown-item">Login</a>
+                        <a href="/notification" class="dropdown-item">notifications</a>
+                        <a href="/wishlist" class="dropdown-item">wishlist</a>
                         <a href="/profile" class="dropdown-item">Edit Profile</a>
-                        <a href="#" class="dropdown-item">Notifications</a>
                         <hr class="dropdown-divider">
+                       <%if(userData.length||userData.name){%>
                         <p class="dropdown-item" onclick="openModal()">Logout</p>
+                        <%}else{%>
+                          <a href="/login" class="dropdown-item">Login</a>
+                          <%=userData.name%>
+                        <%}%>
+                       
+                      
+                       
                       </div>
                     </div>
                   </div>
                   
                 <li><a class="nav-link" href="/cart"><img src="/images/cart.svg"></a></li>
+                
             </ul>
         </div>
     </div>
@@ -80,7 +89,13 @@
   
  async function logout() {
   console.log('logout');
-     await axios.get('/logout');
+     axios.get('/logout').then((response)=>{
+      if(response.data===true){
+        window.location.href="/"
+      }
+     }).catch((error)=>{
+      console.log(error);
+     })
       console.log('Logout action');
       closeModal(); 
   }

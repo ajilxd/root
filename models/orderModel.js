@@ -4,7 +4,7 @@ const orderSchema = new mongoose.Schema(
   {
     userId: {
       type: Objectid,
-      ref: "users",
+      ref: "user",
       required: true,
     },
     deliveryAddress: {

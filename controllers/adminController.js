@@ -2,11 +2,12 @@ const adminModal = require("../models/adminModel");
 const { categorySchema, productSchema } = require("../helpers/valiadator");
 const productModel = require("../models/productModel");
 const categoryModel = require("../models/categoryModel");
-const userModel=require('../models/userModel');
-
-
-
-
+const userModel = require("../models/userModel");
+const orderModel = require("../models/orderModel");
+const requestModel = require("../models/userRequestsModel");
+const notificationModel = require("../models/notificationModel");
+const reviewModel = require("../models/reviewModel");
+const { request } = require("express");
 const adminLoginLoader = async (req, res) => {
   try {
     res.render("adminlogin");
@@ -60,7 +61,14 @@ const categoriesLoader = async (req, res) => {
 
 const ordersLoader = async (req, res) => {
   try {
-    res.render("orders");
+    const orderData = await orderModel.find({}).populate("userId");
+    const cancelData = await requestModel
+      .find({ isCancel: true })
+      .populate("userId");
+    const returnData = await requestModel
+      .find({ isReturn: true })
+      .populate("userId");
+    res.render("orders", { orderData, cancelData, returnData });
   } catch (error) {
     console.log(error.message);
   }
@@ -87,8 +95,7 @@ const transactionsLoader = async (req, res) => {
 const addProductDb = async (req, res) => {
   try {
     // validation
-    console.log(req.body);
-    console.log(req.files);
+
     const {
       price,
       cost,
@@ -98,16 +105,31 @@ const addProductDb = async (req, res) => {
       description,
       productname,
       status,
+      categories,
+      quantity,
     } = req.body;
-
+    console.log("categoryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", categories);
     const imagePaths = req.files.map((i) => i.filename);
-    const validation = await productSchema.validateAsync(req.body);
+    console.log(req.body);
+    try {
+      await productSchema.validateAsync(req.body); //joi validation
+    } catch (error) {
+      console.log("hii error");
+      console.log(error.message);
+      return res.json(error.message);
+    }
+    const existingproduct = await productModel.findOne({
+      productName: productname,
+    });
+
     if (imagePaths.length < 1) {
       return res.json("emptyfiles");
     } else if (Number(price) < Number(cost)) {
       return res.json("lowprice");
     } else if (imagePaths.length < 4) {
       return res.json("less");
+    } else if (existingproduct) {
+      return res.json("Existing product name");
     }
 
     // storing in db
@@ -121,11 +143,13 @@ const addProductDb = async (req, res) => {
       color: color,
       status: status,
       image: imagePaths,
+      categoryId: categories,
+      quantity: quantity,
     });
     await productData.save();
     res.json(true);
   } catch (error) {
-    res.json(error.message);
+    console.log(error);
   }
 };
 
@@ -141,12 +165,17 @@ const loadAddCategory = async (req, res) => {
 const addCategoryDb = async (req, res) => {
   try {
     console.log("addcat", req.body);
-    const validation = await categorySchema.validateAsync(req.body);
-    const existingcategory = await categoryModel.find({
-      categoryname: req.body.categoryname,
+    try {
+      await categorySchema.validateAsync(req.body);
+    } catch (error) {
+      res.json(error.message);
+    }
+
+    const existingcategory = await categoryModel.findOne({
+      categoryName: req.body.categoryname,
     });
-    if (existingcategory.length > 0) {
-      return res.json(false);
+    if (existingcategory) {
+      return res.json("existing category name");
     }
     const categoryData = new categoryModel({
       categoryName: req.body.categoryname,
@@ -156,22 +185,34 @@ const addCategoryDb = async (req, res) => {
     const data = await categoryData.save();
     res.json(true);
   } catch (error) {
-    res.json(error.message);
-    console.log("fgfgfg", error.message);
+    console.log("error at add category", error.message);
   }
 };
 
 const editcategoryDb = async (req, res) => {
   try {
-    await categorySchema.validateAsync(req.body);
     const categoryid = req.params.id;
     console.log(req.body);
-    const { categoryName, description, status } = req.body;
+    const { categoryname, description, status } = req.body;
+
+    try {
+      await categorySchema.validateAsync(req.body);
+    } catch (error) {
+      return res.json(error.message);
+    }
+
+    const existingcategory = await categoryModel.findOne({
+      categoryName: req.body.categoryname,
+    });
+    console.log(existingcategory);
+    if (existingcategory) {
+      return res.json("Existing category");
+    }
     await categoryModel.updateOne(
       { _id: categoryid },
       {
         $set: {
-          categoryName: categoryName,
+          categoryName: categoryname,
           description: description,
           status: status,
         },
@@ -179,7 +220,7 @@ const editcategoryDb = async (req, res) => {
     );
     res.json(true);
   } catch (error) {
-    res.json(error.message);
+    console.log(error.message);
   }
 };
 
@@ -199,7 +240,7 @@ const productsLoader = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
-    console.log("edit product", req.params);
+    console.log("edit product");
     const productId = req.params.id;
     const category = await categoryModel.find({});
     const productData = await productModel.findOne({ _id: productId });
@@ -211,6 +252,7 @@ const editProduct = async (req, res) => {
 
 const editProductDb = async (req, res) => {
   try {
+    console.log(req.body);
     const {
       price,
       cost,
@@ -220,10 +262,23 @@ const editProductDb = async (req, res) => {
       productname,
       color,
       size,
+      categories,
+      quantity,
     } = req.body;
     const productId = req.params.id;
     const imagePath = req.files.map((i) => i.filename);
-    await productSchema.validateAsync(req.body);
+    const existingproduct = await productModel.findOne({
+      productName: productname,
+    });
+    if (existingproduct) {
+      return res.json("existing productname");
+    }
+    try {
+      await productSchema.validateAsync(req.body);
+    } catch (error) {
+      return res.json(error.message);
+    }
+
     await productModel.updateOne(
       { _id: productId },
       {
@@ -237,24 +292,188 @@ const editProductDb = async (req, res) => {
           color: color,
           size: size,
           image: imagePath,
+          categoryId: categories,
+          quantity: quantity,
         },
       }
     );
     res.json(true);
   } catch (error) {
-    res.json(error.message);
+    console.log(error.message);
   }
 };
 
 const userLoader = async (req, res) => {
   try {
-    const 
-    res.render('users')
+    const users = await userModel.find({});
+    res.render("users", { users });
   } catch (error) {
     console.log(error.message);
   }
 };
 
+const blockUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const userData = await userModel.findByIdAndUpdate(
+      { _id: userId },
+      { $set: { isBlocked: true } }
+    );
+    console.log(`${userData.name} has been succesfully blocked`);
+    res.json(true);
+  } catch (error) {
+    console.log("error at blocking user");
+    console.log(error.message);
+  }
+};
+const unblockUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const userData = await userModel.findByIdAndUpdate(
+      { _id: userId },
+      { $set: { isBlocked: false } }
+    );
+    console.log(`${userData.name} has been succesfully unblocked`);
+    res.json(true);
+  } catch (error) {
+    console.log("error at unblocking user");
+    console.log(error.message);
+  }
+};
+
+const orderDetailsLoader = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const orderData = await orderModel
+      .findOne({ orderId: orderId })
+      .populate("userId")
+      .populate("deliveryAddress");
+    res.render("orderdetails", { orderData });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const orderStatusUpdate = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { selectedValue, orderId } = req.body;
+    const orderData = await orderModel.updateOne(
+      { orderId: orderId },
+      { status: selectedValue }
+    );
+    console.log(orderData);
+    res.json(true);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const logoutAdminhandler = async (req, res) => {
+  try {
+    req.session.admin = null;
+    res.redirect("/admin/login");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const logOutAdmin = async (req, res) => {
+  try {
+    req.session.admin = null;
+    res.json(true);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const cancelApprovedHandler = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { orderId, requestId, userId } = req.body;
+    await orderModel.updateOne(
+      { orderId: orderId },
+      { $set: { status: "Cancelled" } }
+    );
+    await requestModel.deleteOne({ _id: requestId });
+    await notificationModel.updateOne(
+      { userId: userId },
+      {
+        $push: {
+          messages: `#${orderId} has been successfully cancelled`,
+        },
+      },
+      {
+        upsert: true,
+      }
+    );
+
+    res.json(true);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const cancelDiscardHandler = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { requestId } = req.body;
+    await requestModel.deleteOne({ _id: requestId });
+    res.json(true);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const returnApprovedHandler = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { orderId, requestId, userId } = req.body;
+    await orderModel.updateOne(
+      { orderId: orderId },
+      { $set: { status: "Returned" } }
+    );
+    await requestModel.deleteOne({ _id: requestId });
+    await notificationModel.updateOne(
+      { userId: userId },
+      {
+        $push: {
+          messages: `#${orderId} has been successfully approved for return`,
+        },
+      },
+      {
+        upsert: true,
+      }
+    );
+    res.json(true);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const returnDiscardHandler = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { orderId, requestId } = req.body;
+    await requestModel.deleteOne({ _id: requestId });
+    res.json(true);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const loadReviews = async (req, res) => {
+  try {
+    const reviewData = await reviewModel
+      .find({})
+      .populate("userId")
+      .populate("productId");
+    console.log(reviewData);
+    res.render("reviews", { reviewData });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 module.exports = {
   adminLoginLoader,
   verifyAdminLogin,
@@ -271,4 +490,16 @@ module.exports = {
   editProduct,
   editProductDb,
   editcategoryDb,
+  userLoader,
+  blockUser,
+  unblockUser,
+  orderDetailsLoader,
+  orderStatusUpdate,
+  logoutAdminhandler,
+  logOutAdmin,
+  cancelApprovedHandler,
+  cancelDiscardHandler,
+  returnApprovedHandler,
+  returnDiscardHandler,
+  loadReviews,
 };
