@@ -39,7 +39,10 @@ const verifyOtp = async (req, res) => {
       const otpdeletion = await Otp.deleteOne({
         email: req.session.user.email,
       });
+<<<<<<< HEAD
       await userModel.updateOne({email:req.session.user.email},{isVerified:true})
+=======
+>>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
       if (otpdeletion) {
         console.log("otp deletion went succesfull");
       }
@@ -55,7 +58,10 @@ const resendotphandler = async (req, res) => {
   try {
     console.log("session at resendotp", req.session);
     await otpModel.deleteOne({ email: req.session.user.email });
+<<<<<<< HEAD
     const data =await otpModel.find({email:req.session.user.email})
+=======
+>>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
     sendOtp(req.session?.user?.email);
   } catch (error) {
     console.log(error.message);

@@ -18,7 +18,10 @@ const CreateReview = async (req, res) => {
     const productId = req.params.id;
     const rating = req.body.rating;
     const review = req.body.message;
+<<<<<<< HEAD
     
+=======
+>>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
     console.log(
       "create review section here",
       userId,
@@ -33,10 +36,17 @@ const CreateReview = async (req, res) => {
       userId: userId,
       productId: productId,
     });
+<<<<<<< HEAD
     // console.log(alreadyReviewed);
     // if (alreadyReviewed) {
     //   return res.json("User already reviewed");
     // }
+=======
+    console.log(alreadyReviewed);
+    if (alreadyReviewed) {
+      return res.json("User already reviewed");
+    }
+>>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
     console.log(Boolean(review));
     if (!review) {
       return res.json("Review cant be submitted with null ");
@@ -50,6 +60,7 @@ const CreateReview = async (req, res) => {
       productId: productId,
     });
     await newreview.save();
+<<<<<<< HEAD
     // console.log("heyyyyyyyyyy");
     // console.log(newreview);
     // update rating of product
@@ -64,6 +75,19 @@ const CreateReview = async (req, res) => {
     console.log('total ratingssssssssssssssssssssssssssssssssssss',totalRatings);
     // update rating to the product
     await productModel.updateOne({_id:productId},{$set:{rating:avgRating}});
+=======
+    console.log("heyyyyyyyyyy");
+    console.log(newreview);
+    // update rating of product
+    const totalReviewDatas = await reviewModel({ productId: productId });
+    const sumOfAllRatings = totalReviewDatas.reduce(
+      (total, datas) => total + datas.rating,
+      0
+    );
+    console.log(sumOfAllRatings, "sum of all rating here...");
+    await productModel({ _id: productId });
+    res.json(true);
+>>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
   } catch (error) {
     console.log(error.message);
   }
