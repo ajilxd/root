@@ -6,16 +6,30 @@ const offerSchema = new mongoose.Schema({
     required: true,
   },
 
-  discountPercentage: {
+  discountpercentage: {
     type: Number,
+    required: true,
   },
 
-  Status:{
-    type: Boolean,
+  status:{
+    type: String,
     default:false
   },
-  expiryDate:{
+  expirydate:{
     type: Date,
+    required:true
+  },
+  description:{
+    type:String,
+    required:true
+  },
+  category:{
+    type:String,
+    ref:'category',
+    required:true
+  },
+  image:{
+    type:String,
     required:true
   }
 },

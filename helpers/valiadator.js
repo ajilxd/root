@@ -332,6 +332,27 @@ const couponSchema = joi.object({
   status: joi.string()
 });
 
+const offerSchema = joi.object({
+  name: joi.string().min(3).required().messages({
+    'string.min': 'Name must be at least 3 characters long.',
+    'any.required': 'Name is required.'
+  }),
+  discountpercentage: joi.string().regex(/^[0-9]*$/).required().messages({
+    'string.pattern.base': 'Discount percentage must contain only digits (0-9).',
+    'any.required': 'Discount percentage is required.'
+  }),
+  status: joi.string(),
+  expirydate: joi.date().iso().min('2024-01-01').messages({
+    'date.base': 'Expiry date must be a valid date in ISO 8601 format (e.g., YYYY-MM-DD).',
+    'date.min': 'Expiry date cannot be before 2024.'
+  }),
+  description: joi.string().required().messages({
+    'any.required': 'Description is required.'
+  }),
+  category: joi.string(),
+  image: joi.string(),
+  offerid:joi.string()
+});
 
 
 
@@ -346,5 +367,6 @@ module.exports = {
   editPasswordSchema,
   changePasswordSchema,
   reviewValidationSchema,
-  couponSchema
+  couponSchema,
+  offerSchema 
 };

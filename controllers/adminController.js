@@ -1,5 +1,5 @@
 const adminModal = require("../models/adminModel");
-const { categorySchema, productSchema,couponSchema } = require("../helpers/valiadator");
+const { categorySchema, productSchema,couponSchema,offerSchema} = require("../helpers/valiadator");
 const productModel = require("../models/productModel");
 const categoryModel = require("../models/categoryModel");
 const userModel = require("../models/userModel");
@@ -9,6 +9,7 @@ const notificationModel = require("../models/notificationModel");
 const reviewModel = require("../models/reviewModel");
 const { request } = require("express");
 const CouponModel = require("../models/couponModel");
+const offerModel =require("../models/offerModel")
 const adminLoginLoader = async (req, res) => {
   try {
     res.render("adminlogin");
@@ -563,18 +564,74 @@ const addofferload =async (req,res)=>{
 
 
 
-const sampleroute = async (req,res)=>{
+const offerDb = async (req,res)=>{
   try{
-    console.log(req.body);
-    console.log('bgyuvhuhjg',req.files)
+   const {name,status,discountpercentage,expirydate,description,category} = req.body;
+  //  validation
+   try{
+    await offerSchema.validateAsync(req.body);
+   }
+   catch(error){
+   return res.json(error.message);
+   }
+  // checking offer name is taken or not
+  const existing= await offerModel.findOne({name});
+  if(existing){
+    return res.json("Existing offer name");
+  }
+   const imagePath=req.file.filename;
+   const offerData =new offerModel({
+    name,status,discountpercentage,expirydate,description,category,image:imagePath
+   })
+   await offerData.save();
+   res.json(true);
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+const alloffersloader = async(req,res)=>{
+  try{
+    const offerData = await offerModel.find({});
+    res.render('alloffers',{offerData})
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+const editOffer = async(req,res)=>{
+  try{
+    const offerid =req.params.id;
+    const offerdata= await offerModel.findOne({_id:offerid})
+    res.render('editoffer',{offerdata});
   }catch(error){
     console.log(error.message)
   }
 }
 
 
-
-
+const editofferdb = async(req,res)=>{
+  try{
+    console.log(req.body);
+    const {name,status,discountpercentage,expirydate,description,category,offerid} =req.body;
+    //  validation
+   try{
+    await offerSchema.validateAsync(req.body);
+   }
+   catch(error){
+   return res.json(error.message);
+   }
+  // checking offer name is taken or not
+  const existing= await offerModel.findOne({name});
+  if(existing){
+    return res.json("Existing offer name");
+  }
+    await offerModel.updateOne({_id:offerid},{name,status,discountpercentage,expirydate,description,category});
+    res.json(true);
+  }catch(error){
+    console.log(error);
+  }
+}
 
 module.exports = {
   adminLoginLoader,
@@ -610,5 +667,8 @@ module.exports = {
   editCouponLoader,
   editCouponDb,
   addofferload,
-  sampleroute 
+  offerDb ,
+  alloffersloader,
+  editOffer,
+  editofferdb
 };

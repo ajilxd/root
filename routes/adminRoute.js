@@ -3,6 +3,7 @@ const adminRoute = express();
 const path = require("path");
 const adminController = require("../controllers/adminController");
 const upload = require("../middleware/multer");
+const uploadB = require("../middleware/multerblob")
 const { isAdminLogin, isAdminLogout } = require("../middleware/auth");
 adminRoute.set("views", "./views/admin");
 adminRoute.use(
@@ -67,5 +68,8 @@ adminRoute.post("/addcoupon",adminController.addCouponDb)
 adminRoute.get("/editcoupon/:id",adminController.editCouponLoader);
 adminRoute.post("/editcoupon/:id",adminController.editCouponDb);
 adminRoute.get("/addoffer",adminController.addofferload)
-adminRoute.post("/croproute", upload.single("image"),adminController.sampleroute)
+adminRoute.post("/addoffer", uploadB.single("image"),adminController.offerDb);
+adminRoute.get("/offers",adminController.alloffersloader);
+adminRoute.get("/editoffer/:id",adminController.editOffer);
+adminRoute.post("/editoffer",uploadB.single("image"),adminController.editofferdb)
 module.exports = adminRoute;

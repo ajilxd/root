@@ -5,13 +5,16 @@
         <main class="main-wrap">
             <%- include("./partials/nav.ejs")%>
             
+            <% const expStr =offerdata.expirydate%>
+            <% const expiryDateObj = new Date(expStr)%>
+            <% const until =expiryDateObj.toISOString().slice(0, 10); %>
             <section class="content-main">
                 <div class="row">
                     <div class="col-9">
                         <div class="content-header">
                             <h2 class="content-title">Add Offer</h2>
                             <div>
-                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up"  id="offersubmitbtn" type="button" >Save</button>
+                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up"  id="offersubmitbtn" type="button" data-id="<%=offerdata._id%>" >Save</button>
                             </div>
                         </div>
                     </div>
@@ -20,7 +23,7 @@
                             <div class="card-body">
                                 <div class="mb-4">
                                     <label for="product_title" class="form-label">Offer name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="offername" />
+                                    <input type="text" placeholder="Type here" class="form-control" id="offername" value="<%=offerdata.name%>"/>
                                 </div>
                                 <div class="row gx-3">
                                     <label class="form-label">Category</label>
@@ -31,16 +34,16 @@
                                     <div class="d-flex justify-content-between mt-3">
                                     <div class="col-md-5 mb-4">
                                         <label for="product_color" class="form-label">Discount percentage</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="offerdiscountperecentage" />
+                                        <input type="text" placeholder="Type here" class="form-control" id="offerdiscountperecentage"  value="<%=offerdata.discountpercentage%>"/>
                                     </div>
                                     <div class="col-md-5 mb-4">
                                         <label class="form-label">Expiry Date</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id ="offerexpirydate" />
+                                        <input type="text" placeholder="Type here" class="form-control" id ="offerexpirydate" value="<%=until%>"/>
                                     </div>
                                 </div>
                                     <div class=" col-md-10 mb-10">
                                         <label class="form-label " >Category description</label>
-                                       <textarea  id="offerdescription" cols="60" rows="3"></textarea>
+                                       <textarea  id="offerdescription" cols="60" rows="3" placeholder="<%=offerdata.description%>"></textarea>
                                     </div>
                                    
                                 </div>
@@ -77,7 +80,7 @@
                         <div class="col-10">
                             <label class="form-label fw-bolder ">Image preview</label>
                             <div class="card col-10" style="width:500px;height:500px">
-                            <img src="" alt="" class="img-thumbnail "></div>
+                            <img src="/multer/categories/<%=offerdata.image%>" alt="" class="img-thumbnail "></div>
                         </div>
                     </div> 
                 </div>
@@ -196,6 +199,7 @@ document.getElementById('offersubmitbtn').addEventListener('click',function(){
    const image = document.getElementById('image-input').files[0];
    const data={name,status,discountperecentage,expirydate,description,category,image};
    const croppedImageBlob = dataURItoBlob(croppedImageData);
+   const offerid=document.getElementById('offersubmitbtn').getAttribute('data-id');
    const formData = new FormData();
     formData.append('name', name);
     formData.append('status', status);
@@ -204,8 +208,9 @@ document.getElementById('offersubmitbtn').addEventListener('click',function(){
     formData.append('description', description);
     formData.append('category', category);
     formData.append('image',  croppedImageBlob);
+    formData.append('offerid',offerid);
     console.log(formData);
-    axios.post('/admin/addoffer', formData, {
+    axios.post('/admin/editoffer', formData, {
     headers: {
         'Content-type': "multipart/form-data"
     }

@@ -1,0 +1,69 @@
+<%- include("./partials/header.ejs")%>
+<%- include("./partials/sidebar.ejs")%>
+
+        <main class="main-wrap">
+            <%- include("./partials/nav.ejs")%>
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title fw-bold display-6">Offers</h2>
+                        <p class="lead fw-medium ">offer management</p>
+                    </div>
+                    <div>
+                        <a href="/admin/addoffer"><button class="btn  btn-success text-white   ">create new offer</button></a>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    
+                    <!-- card-header end// -->
+               
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Banner</th>
+                                        <th>Name</th>
+                                        <th>Discount</th>
+                                        <th>Status</th>
+                                        <th>Description</th>
+                                        <th>Category</th>
+                                        <th>Since</th>
+                                        <th>ExpiryDate</th>
+                                        <th class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% offerData.forEach((i, index) => { %>
+                                        <tr>
+                                            <% const dateString = i.createdAt; %>
+                                            <% const dateObject = new Date(dateString); %>
+                                            <% const since = dateObject.toISOString().slice(0, 10); %>
+                                            <% const expStr =i.expirydate%>
+                                            <% const expiryDateObj = new Date(expStr)%>
+                                            <% const until =expiryDateObj.toISOString().slice(0, 10); %>
+                                            <td><%= index %></td>
+                                            <td> <img src="/multer/categories/<%=i.image%>" class="img-sm img-thumbnail" alt="Item" /></td>
+                                            <td><%= i?.name %></td>
+                                            <td><%= i?.discountpercentage %></td>
+                                            <td><%=i.status%></td>
+                                            <td><%= i?.description %></td>
+                                            <td>CATEGORY</td>
+                                            <td><%=since%></td>
+                                            <td><%=until %></td>
+                                            <td class="p-3 "><a href="/admin/editoffer/<%=i._id%>"><button class="btn btn-warning btn-sm rounded-pill px-4 text-white"  >Edit</button></a></td>
+                                            <!-- data-bs-toggle="modal" data-bs-target="#editcategory" data-category-id="<%= i.id %>" data-category-name="<%= i.categoryName %>" data-category-description="<%= i.description %>" data-category-status="<%= i.status %>">
+                                                        Edit -->
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive//end -->
+                    </div>
+                    
+                </div>
+            </section>
+            <%- include("./partials/footer.ejs")%>
+        
