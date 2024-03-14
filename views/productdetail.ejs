@@ -308,6 +308,11 @@
   display: block;
   text-align: center;
 }
+
+.zoom {
+  transform: scale(6);
+  transition: transform 0.3s ease-in-out;
+}
 </style>
 
 
@@ -403,7 +408,6 @@
         				<div class="product-info">
 		        			<div class="product-name"><%=productData.productName%></div>
 		        			<div class="reviews-counter">
-<<<<<<< HEAD
 								<div class="rating">
 									<% for (let j = 5; j >= 1; j--) { %>
 										<% if (j <= productData.rating) { %>
@@ -414,21 +418,6 @@
 									<% } %>
 								</div>
 								<p class="ms-4">(<%=reviewData.length%> Reviews)</p>
-=======
-								<div class="rate">
-								    <input type="radio" id="star5" name="rate" value="5"  />
-								    <label for="star5" title="text">5 stars</label>
-								    <input type="radio" id="star4" name="rate" value="4"  />
-								    <label for="star4" title="text">4 stars</label>
-								    <input type="radio" id="star3" name="rate" value="3"  />
-								    <label for="star3" title="text">3 stars</label>
-								    <input type="radio" id="star2" name="rate" value="2" />
-								    <label for="star2" title="text">2 stars</label>
-								    <input type="radio" id="star1" name="rate" value="1" />
-								    <label for="star1" title="text">1 star</label>
-								  </div>
-								<span><%=reviewData.length%> Reviews</span>
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
 							</div>
 		        			<div class="product-price-discount"><span><%=productData.price%></span></div>
 		        		</div>
@@ -513,21 +502,12 @@
 			        			<div class="reviews-counter">
 									
 	
-<<<<<<< HEAD
 							<div class="rrating"><!--
 							--><input name="stars" id="e5"  type="radio" value="1"></a><label for="e5">☆</label><!--
 								--><input name="stars"  id="e4" type="radio" value="2" ></a><label for="e4">☆</label><!--
 								--><input name="stars"   id="e3" type="radio" value="3"></a><label for="e3">☆</label><!--
 								--><input name="stars"  id="e2" type="radio" value="4"></a><label for="e2">☆</label><!--
 								--><input name="stars" id="e1" type="radio" value="5"></a><label for="e1">☆</label>
-=======
-							<div class="rating"><!--
-							--><input name="stars" id="e5" type="radio" value="5"></a><label for="e5">☆</label><!--
-								--><input name="stars" id="e4" type="radio" value="4"></a><label for="e4">☆</label><!--
-								--><input name="stars" id="e3" type="radio" value="3"></a><label for="e3">☆</label><!--
-								--><input name="stars" id="e2" type="radio" value="2"></a><label for="e2">☆</label><!--
-								--><input name="stars" id="e1" type="radio" value="1"></a><label for="e1">☆</label>
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
 							</div>
   
   
@@ -565,11 +545,7 @@
 	  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<<<<<<< HEAD
 	
-=======
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="	sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
 	<script src="https://cdn.jsdelivr.net/npm/notyf@3"></script>
 	<script>
  
@@ -636,7 +612,6 @@
 
 
     <script>
-<<<<<<< HEAD
 		var selectedValue;
 		document.addEventListener('DOMContentLoaded', function() {
     const reviewForm = document.getElementById('addreviewform');
@@ -648,14 +623,6 @@
 		stars.forEach(star => {
 			star.addEventListener('click', function() {
 
-=======
-		document.addEventListener('DOMContentLoaded', function() {
-    const reviewForm = document.getElementById('addreviewform');
-	const stars = document.querySelectorAll('.rating input[type="radio"]');
-		let selectedValue;
-		stars.forEach(star => {
-			star.addEventListener('click', function() {
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
 				 selectedValue = this.value;
 				console.log('Selected value:', selectedValue);
 			});
@@ -663,7 +630,6 @@
     reviewForm.addEventListener('submit', function(event) {
         event.preventDefault();
        
-<<<<<<< HEAD
      
         const rating = selectedValue
         
@@ -675,19 +641,6 @@
 		console.log('productid',productId)
         
 		console.log({productId,message,rating});
-=======
-        // Getting rating value
-        const rating = selectedValue
-        
-        // Getting message value
-        const message = document.querySelector('.review-form textarea.form-control').value;
-
-        // Assuming 'data-id' attribute is correctly set on the form element
-        const productId = document.getElementById('submitreviewbtn').getAttribute('data-id');
-		console.log('productid',productId)
-        // Now you can proceed with sending the rating, message, and productId to the server
-        // using AJAX (e.g., Axios)
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
         axios.post(`/review/addreview/${productId}`, {
             rating,
             message

@@ -3,6 +3,7 @@ const path = require("path");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     isProduct = Object.keys(req.body).includes("productname");
+    console.log(req);
     let destinationFolder;
 
     if (!isProduct) {
@@ -15,7 +16,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
-    console.log(req.files.filename);
+    console.log(req?.files?.filename);
   },
 });
 module.exports = upload = multer({ storage: storage });

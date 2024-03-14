@@ -60,4 +60,12 @@ adminRoute.post("/returnapproved", adminController.returnApprovedHandler);
 adminRoute.post("/returndiscard", adminController.returnDiscardHandler);
 adminRoute.get("/reviews", adminController.loadReviews);
 
+adminRoute.get("/coupons",adminController.couponsLoader);
+adminRoute.get("/addCoupon",adminController.addCoupon);
+adminRoute.post("/addcoupon",adminController.addCouponDb)
+
+adminRoute.get("/editcoupon/:id",adminController.editCouponLoader);
+adminRoute.post("/editcoupon/:id",adminController.editCouponDb);
+adminRoute.get("/addoffer",adminController.addofferload)
+adminRoute.post("/croproute", upload.single("image"),adminController.sampleroute)
 module.exports = adminRoute;

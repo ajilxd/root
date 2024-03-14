@@ -1,5 +1,5 @@
 const adminModal = require("../models/adminModel");
-const { categorySchema, productSchema } = require("../helpers/valiadator");
+const { categorySchema, productSchema,couponSchema } = require("../helpers/valiadator");
 const productModel = require("../models/productModel");
 const categoryModel = require("../models/categoryModel");
 const userModel = require("../models/userModel");
@@ -8,6 +8,7 @@ const requestModel = require("../models/userRequestsModel");
 const notificationModel = require("../models/notificationModel");
 const reviewModel = require("../models/reviewModel");
 const { request } = require("express");
+const CouponModel = require("../models/couponModel");
 const adminLoginLoader = async (req, res) => {
   try {
     res.render("adminlogin");
@@ -474,6 +475,107 @@ const loadReviews = async (req, res) => {
     console.log(error.message);
   }
 };
+
+const couponsLoader =async(req,res)=>{
+  try{
+    const allCoupons = await CouponModel.find({})
+    res.render('coupons',{couponData:allCoupons})
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+const addCoupon = async(req,res) =>{
+  try{
+    res.render('addcoupon')
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+const addCouponDb = async(req,res)=>{
+  try{
+    const {name,code,status,limit,expiryDate,discountAmount, criteriaAmount}= req.body;
+    try{ 
+       await couponSchema.validateAsync(req.body);
+    }catch(error){
+       return res.json(error.message)
+    }
+    const couponData =  new CouponModel({
+      name:name,
+      code:code,
+      status:status,
+      limit:limit,
+      expiryDate:expiryDate,
+      discountAmount:discountAmount,
+      criteriaAmount:criteriaAmount
+    })
+    
+    await couponData.save();
+   
+    res.json(true);
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+const editCouponLoader = async (req,res)=>{
+  try{
+    console.log(req.params);
+    const couponId =req.params.id;
+    const couponData =await CouponModel.findOne({_id:couponId})
+    res.render('editcoupon',{couponData})
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+const editCouponDb =async (req,res)=>{
+  try{
+    const couponId=req.params.id;
+   
+    const {name,code,status,limit,expiryDate,discountAmount, criteriaAmount}= req.body;
+    // validation
+   
+    try{ 
+       await couponSchema.validateAsync(req.body);
+    }catch(error){
+       return res.json(error.message)
+    }
+    
+    await CouponModel.updateOne({_id:couponId},{$set:{
+      name,code,status,limit,expiryDate,discountAmount,criteriaAmount
+    }})
+    res.json(true);
+  }
+  catch(error){
+    console.log(error.message)
+  }
+}
+
+const addofferload =async (req,res)=>{
+  try{
+    res.render('addoffers');
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+
+
+const sampleroute = async (req,res)=>{
+  try{
+    console.log(req.body);
+    console.log('bgyuvhuhjg',req.files)
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+
+
+
+
 module.exports = {
   adminLoginLoader,
   verifyAdminLogin,
@@ -502,4 +604,11 @@ module.exports = {
   returnApprovedHandler,
   returnDiscardHandler,
   loadReviews,
+  couponsLoader,
+  addCoupon,
+  addCouponDb,
+  editCouponLoader,
+  editCouponDb,
+  addofferload,
+  sampleroute 
 };

@@ -301,6 +301,41 @@ const reviewValidationSchema = joi
   })
   .options({ abortEarly: false });
 
+// coupon
+
+
+const couponSchema = joi.object({
+  name: joi.string().min(3).required().messages({
+    'string.min': 'The name must be at least 3 characters long.',
+    'any.required': 'The name field is required.'
+  }),
+  code: joi.string().min(3).required().messages({
+    'string.min': 'The code must be at least 3 characters long.',
+    'any.required': 'The code field is required.'
+  }),
+  discountAmount: joi.string().regex(/^[0-9]*$/).required().messages({
+    'string.pattern.base': 'Please provide a valid discount amount (must be a number).',
+    'any.required': 'The discount amount field is required.'
+  }),
+  criteriaAmount: joi.string().regex(/^[0-9]*$/).required().messages({
+    'string.pattern.base': 'Please provide a valid criteria amount (must be a number).',
+    'any.required': 'The criteria amount field is required.'
+  }),
+  limit: joi.string().regex(/^[0-9]*$/).required().messages({
+    'string.pattern.base': 'Please provide a valid limit (must be a number).',
+    'any.required': 'The limit field is required.'
+  }),
+  expiryDate: joi.date().iso().min('2024-01-01').messages({
+    'date.base': 'Expiry date must be a valid date in ISO 8601 format (e.g., YYYY-MM-DD).',
+    'date.min': 'Expiry date cannot be before 2024.'
+}),
+  status: joi.string()
+});
+
+
+
+
+
 module.exports = {
   signupSchema,
   signinSchema,
@@ -311,4 +346,5 @@ module.exports = {
   editPasswordSchema,
   changePasswordSchema,
   reviewValidationSchema,
+  couponSchema
 };

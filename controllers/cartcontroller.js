@@ -142,15 +142,12 @@ const checkOutLoader = async (req, res) => {
       .find({ userId: req.session.user._id })
       .populate("productId");
     // const userData = await userModel.findOne({ _id: req.session.user._id });
-<<<<<<< HEAD
     const cartDocs = await cartModel.find({});
     const sumOfAllProducts = cartDocs.reduce(
       (total, cart) => total + cart.totals,
       0
     );
     console.log(sumOfAllProducts);
-=======
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
     const addressData = await addressModel.find({
       userId: req.session.user._id,
     });

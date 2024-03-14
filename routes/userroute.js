@@ -72,21 +72,16 @@ userRoute.get("/rendercategory/:id", userController.categoryRenderer);
 // sort by
 userRoute.get("/products/sort/A-Z", userController.sortAscendingName);
 userRoute.get("/products/sort/Z-A", userController.sortDescendingName);
-<<<<<<< HEAD
 userRoute.get("/products/sort/toprated",userController.topRatedProducts);
 
-=======
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
 // addtocart from product details
 userRoute.post(
   "/productdetails/addtocart/:id",
   isLogin,
   cartController.addtocartProductDetailsHandler
 );
-<<<<<<< HEAD
+
 
 userRoute.get('/notification',isLogin,isBlocked,userController.notificationLoader)
-=======
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
 
 module.exports = userRoute;

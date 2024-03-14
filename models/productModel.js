@@ -49,13 +49,10 @@ const productSchema = new mongoose.Schema(
     quantity: {
       type: Number,
     },
-<<<<<<< HEAD
     rating:{
       type:Number,
       default:5
     }
-=======
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
   },
   {
     timestamps: true,

@@ -18,12 +18,9 @@ const reviewModel = require("../models/reviewModel");
 const requestModel = require("../models/userRequestsModel");
 const wishlistModel = require("../models/wishlistModel");
 const categoryModel = require("../models/categoryModel");
-<<<<<<< HEAD
 const notificationModel =require("../models/notificationModel")
 
 
-=======
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
 const loadHomepage = async (req, res) => {
   try {
     const userData = await userModal.find({ _id: req.session?.user?._id });
@@ -93,10 +90,7 @@ const verifylogin = async (req, res) => {
     const { email, password } = req.body;
     const userDb = await User.findOne({ email: email });
     const validuser = await comparePasswords(password, userDb.password);
-<<<<<<< HEAD
     if(userDb.isVerified){
-=======
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
     if (userDb.isBlocked) {
       return res.json("You are banned...!");
     }
@@ -125,15 +119,10 @@ const productDetailsLoad = async (req, res) => {
     const reviewData = await reviewModel
       .find({ productId: productid })
       .populate("userId");
-<<<<<<< HEAD
-    // console.log("reviewsssssssssssssssssss", reviewData);
-    const productData = await productModel.findOne({ _id: productid });
-    // console.log(productData, userData);
-=======
+   
     console.log("reviewsssssssssssssssssss", reviewData);
     const productData = await productModel.findOne({ _id: productid });
     console.log(productData, userData);
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
     res.render("productdetail", { productData, userData, reviewData });
   } catch (error) {
     console.log(error.message);
@@ -199,11 +188,9 @@ const sortDescendingName = async (req, res) => {
       },
     ]);
     const catData = await categoryModel.find({});
-<<<<<<< HEAD
+
     const userData = await userModal.find({ _id:  req.session?.user?._id  });
-=======
-    const userData = await userModal.find({ _id: req.session.user._id });
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
+
     const catname = false;
     res.render("shop", {
       productData,
@@ -215,7 +202,6 @@ const sortDescendingName = async (req, res) => {
     console.log(error.message);
   }
 };
-<<<<<<< HEAD
 
 const topRatedProducts = async (req, res) => {
   try {
@@ -259,8 +245,6 @@ const notificationLoader = async (req, res) => {
 
 
 
-=======
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
 // adding new address
 
 const addAddressDb = async (req, res) => {
@@ -576,9 +560,6 @@ module.exports = {
   categoryRenderer,
   sortAscendingName,
   sortDescendingName,
-<<<<<<< HEAD
   topRatedProducts,
   notificationLoader
-=======
->>>>>>> 012eb61beef60129d4b4ed8b9e6759c14b1ed50b
 };
